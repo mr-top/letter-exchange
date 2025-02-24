@@ -4,6 +4,8 @@ const LokiStore = require('connect-loki')(session);
 const morgan = require('morgan');
 const cors = require('cors');
 
+const dbFunctons = require('./utils/dbFunctions');
+
 const app = express();
 
 app.use(cors({
@@ -21,6 +23,8 @@ app.use(session({
   store: new LokiStore({})
 }));
 
+app.use(express.json());
+
 app.use(morgan('common'));
 
 app.get('/example', (req, res) => {
@@ -34,6 +38,20 @@ app.get('/session', (req, res) => {
   req.session.accessCount = accessCount;
 
   res.send({accessCount});
+});
+
+app.post('/login', async (req, res) => {
+  const {username, password} = req.body;
+  console.log(username);
+
+  const result = await dbFunctons.login(username, password);
+
+  if (result.success) {
+    req.session.logged = true;
+    req.session.userId = result.id;
+  }
+
+  res.send(result);
 });
 
 app.listen(5555, () => {
