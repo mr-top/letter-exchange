@@ -20,11 +20,22 @@ function UserProvider (props) {
     }
   }
 
+  async function attemptLogout () {
+    if (loggedDetails.logged) {
+      const {id} = loggedDetails;
+      axiosFetch(axios.post, 'http://localhost:5555/signout', {id}); // returns promise. don't need the return
+      setLoggedDetails({logged: false});
+      return {success: true, msg: 'Logged out successfully'}
+    } else {
+      return {success: false, msg: 'Not Logged in initially'}
+    }
+  }
+
   useEffect(() => {
     localStorage.setItem('loggedDetails', JSON.stringify(loggedDetails));
   }, [loggedDetails]);
   return (
-    <UserContext.Provider value={{loggedDetails, attemptLogin}}>
+    <UserContext.Provider value={{loggedDetails, attemptLogin, attemptLogout}}>
       {props.children}
     </UserContext.Provider>
   )
