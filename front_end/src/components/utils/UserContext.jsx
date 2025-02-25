@@ -6,14 +6,14 @@ import axiosFetch from "../../utils/axiosFetch";
 const UserContext = createContext();
 
 function UserProvider (props) {
-  const [loggedDetails, setLoggedDetails] = useState( JSON.parse(localStorage.getItem('loggedDetails')) || {});
+  const [loggedDetails, setLoggedDetails] = useState( JSON.parse(localStorage.getItem('loggedDetails')) || {logged: false});
 
   async function attemptLogin (username, password) {
     const result = await axiosFetch(axios.post, 'http://localhost:5555/login', {username, password});
 
     if (result.success) {
       const {username, id, avatar} = result;
-      setLoggedDetails({username, id, avatar});
+      setLoggedDetails({logged: true, username, id, avatar});
       return {success: true, msg: 'Logged in successfully'}
     } else {
       return {success: false, msg: 'Not logged in'}
