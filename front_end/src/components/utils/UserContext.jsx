@@ -23,9 +23,13 @@ function UserProvider (props) {
   async function attemptLogout () {
     if (loggedDetails.logged) {
       const {id} = loggedDetails;
-      axiosFetch(axios.post, 'http://localhost:5555/signout', {id}); // returns promise. don't need the return
-      setLoggedDetails({logged: false});
-      return {success: true, msg: 'Logged out successfully'}
+      const result = await axiosFetch(axios.post, 'http://localhost:5555/signout', {id});
+      if (result.success) {
+        setLoggedDetails({logged: false});
+        return {success: true, msg: 'Logged out successfully'}
+      } else {
+        return {success: false, msg: 'Could not log out'}
+      }
     } else {
       return {success: false, msg: 'Not Logged in initially'}
     }
