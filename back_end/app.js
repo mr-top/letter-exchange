@@ -69,6 +69,14 @@ app.post('/login', async (req, res) => {
   res.send(result);
 });
 
+app.post('/signout', (req, res) => {
+  const {id} = req.body;
+
+  delete req.body.logged;
+  delete req.body.userId;
+  res.send({success: true});
+});
+
 app.post('/register', requiresAuth, async (req, res) => {
   const {username, email, password, geo} = req.body;
 

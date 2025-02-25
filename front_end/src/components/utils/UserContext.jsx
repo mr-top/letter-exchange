@@ -11,6 +11,7 @@ function UserProvider (props) {
   async function attemptLogin (username, password) {
     const result = await axiosFetch(axios.post, 'http://localhost:5555/login', {username, password});
 
+    console.log(result);
     if (result.success) {
       const {username, id, avatar} = result;
       setLoggedDetails({logged: true, username, id, avatar});
