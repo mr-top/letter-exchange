@@ -19,4 +19,21 @@ async function login (username, password) {
   }
 }
 
-module.exports = { login }
+async function register (username, email, password, country) {
+  const insertQuery = await query('INSERT INTO users (username, email, password, country) VALUES ($1, $2, $3, $4)', username, email, password, country);
+
+  if (insertQuery.success) {
+    const result = insertQuery.result;
+
+    if (result.rowCount > 0) {
+      return {success: true, msg: 'User successfully inserted'}
+    } else {
+      return {success: false, msg: 'Could not insert with details'}
+    }
+
+  } else {
+    return {success: false, msg: 'Fatal error trying to access records'}
+  }
+}
+
+module.exports = { login, register }

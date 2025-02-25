@@ -6,6 +6,14 @@ const cors = require('cors');
 
 const dbFunctons = require('./utils/dbFunctions');
 
+function requiresAuth(req, res, next) {
+  if (res.locals.logged) {
+    next();
+  } else {
+    res.send({success: false, msg: 'Not logged in'});
+  }
+}
+
 const app = express();
 
 app.use(cors({
@@ -23,9 +31,17 @@ app.use(session({
   store: new LokiStore({})
 }));
 
+app.use((req, res, next) => {
+  res.locals.logged = req.session.logged;
+  res.locals.usedId = req.session.userId;
+  next();
+});
+
 app.use(express.json());
 
 app.use(morgan('common'));
+
+app.set('trust proxy', true)
 
 app.get('/example', (req, res) => {
   res.send({response: true});
@@ -42,7 +58,6 @@ app.get('/session', (req, res) => {
 
 app.post('/login', async (req, res) => {
   const {username, password} = req.body;
-  console.log(username);
 
   const result = await dbFunctons.login(username, password);
 
@@ -53,6 +68,14 @@ app.post('/login', async (req, res) => {
 
   res.send(result);
 });
+
+app.post('/register', requiresAuth, async (req, res) => {
+  const {username, email, password, geo} = req.body;
+
+  const result = await dbFunctons.register(username, email, password, geo.country);
+
+  res.send(result);
+})
 
 app.listen(5555, () => {
   console.log('started listening');
