@@ -9,7 +9,7 @@ function UserProvider (props) {
   const [loggedDetails, setLoggedDetails] = useState( JSON.parse(localStorage.getItem('loggedDetails')) || {logged: false});
 
   async function attemptLogin (username, password) {
-    const result = await axiosFetch(axios.post, 'http://localhost:5555/login', {username, password});
+    const result = await axiosFetch(axios.post, '/login', {username, password});
 
     console.log(result);
     if (result.success) {
@@ -24,7 +24,7 @@ function UserProvider (props) {
   async function attemptLogout () {
     if (loggedDetails.logged) {
       const {id} = loggedDetails;
-      const result = await axiosFetch(axios.post, 'http://localhost:5555/signout', {id});
+      const result = await axiosFetch(axios.post, '/signout', {id});
       if (result.success) {
         setLoggedDetails({logged: false});
         return {success: true, msg: 'Logged out successfully'}
