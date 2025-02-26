@@ -8,7 +8,6 @@ async function getGeo() {
     geo = geoResult.data;
     return geo;
   } catch (error) {
-    console.log(error);
     return { countryCode: 'XX' }
   }
 
