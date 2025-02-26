@@ -1,9 +1,19 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { UserContext } from "../utils/UserContext";
 
 function Navbar () {
-  const {loggedDetails} = useContext(UserContext);
+  const {loggedDetails, attemptLogout} = useContext(UserContext);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  async function logout () {
+    setLoading(true);
+    const result = await attemptLogout();
+    if (result.success) navigate('home');
+    setLoading(false);
+  }
 
   return (
     <div className="flex flex-row justify-between h-16 min-h-16 p-2 bg-red-700">
@@ -12,13 +22,13 @@ function Navbar () {
       </div>
       <div className="flex-initial h-full w-46 bg-blue-600">
         {loggedDetails.logged ? 
-        <div className="h-full w-full bg-pink-400">
-          <button className="btn">Profile</button>
-          <button className="btn">Sign out</button>
+        <div className="flex justify-between items-center h-full w-full bg-pink-400">
+          <button className="btn" onClick={() => navigate(`/profile/${loggedDetails.id}`)}>Profile</button>
+          <button className="btn" onClick={() => logout()}>Sign out</button>
         </div> :
-        <div className="flex flex-row justify-between items-center h-full w-full bg-slate-400">
-          <button className="btn">Log in</button>
-          <button className="btn">Register</button>
+        <div className="flex justify-between items-center h-full w-full bg-slate-400">
+          <button className="btn" onClick={() => navigate('/login')}>Log in</button>
+          <button className="btn" onClick={() => navigate('/register')}>Register</button>
         </div>}
       </div>
     </div>
