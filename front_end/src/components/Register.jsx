@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import axios from "axios";
+import getGeo from "../utils/getGeo";
 import axiosFetch from "../utils/axiosFetch";
 
 function Register() {
@@ -13,11 +14,7 @@ function Register() {
   async function register (e) {
     e.preventDefault();
     setLoading(true);
-    const geoResult = await axios.get('http://ip-api.com/json', {withCredentials: false});
-    let geo = {countryCode: 'XX'};
-    if (geoResult.status === 200) {
-      geo = geoResult.data;
-    }
+    const geo = await getGeo();
     const result = await axiosFetch(axios.post, '/register', {username, email, password, geo});
     setLoading(false);
   }
