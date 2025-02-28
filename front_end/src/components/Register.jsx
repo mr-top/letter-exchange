@@ -40,13 +40,13 @@ function Register() {
       </div>
       <div className="flex-initial">
         <label>Password:</label>
-        <input type="text" value={password} onChange={e => setPassword(e.currentTarget.value)} className={`w-full h-8 px-2 ${tried && password && !inputVerify.checkPassword(password) && 'border-red-400'}`} />
+        <input type="password" value={password} onChange={e => setPassword(e.currentTarget.value)} className={`w-full h-8 px-2 ${tried && password && !inputVerify.checkPassword(password) && 'border-red-400'}`} />
         <p className="text-xs">{tried && password && !inputVerify.checkPassword(password) && 'Password must have minimum of 8 characters and once uppercase letter'}</p>
       </div>
       <div className="flex-initial">
         <label>Confirm password:</label>
-        <input type="text" value={confirmPassword} onChange={e => setConfirmPassword(e.currentTarget.value)} className={`w-full h-8 px-2 ${tried && confirmPassword && !inputVerify.checkDuplicate(confirmPassword) && 'border-red-400'}`} />
-        <p className="text-xs">{tried && confirmPassword && !inputVerify.checkDuplicate(confirmPassword) && 'Passwords must match'}</p>
+        <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.currentTarget.value)} className={`w-full h-8 px-2 ${confirmPassword && !inputVerify.checkDuplicate(password, confirmPassword) && 'border-red-400'}`} />
+        <p className="text-xs">{confirmPassword && !inputVerify.checkDuplicate(password, confirmPassword) && 'Passwords must match'}</p>
       </div>
       <div className="flex justify-between p-2">
         <button className="flex-initial btn w-22" type="submit" disabled={loading}>Sign Up</button>
