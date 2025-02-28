@@ -3,6 +3,7 @@ import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom"
 
 import { UserContext } from './components/utils/UserContext';
 
+import Home from "./Home";
 import Footer from "./components/footer/Footer"
 import Navbar from "./components/navbar/Navbar"
 import Login from "./components/Login"
@@ -18,11 +19,11 @@ function App() {
         <div className="flex-initial bg-red-400">
           <Navbar />
         </div>
-        <div className="flex-1 flex justify-center p-5 items-centermin-h-[80vh] bg-blue-400">
+        <div className="flex-1 flex justify-center p-2 items-centermin-h-[80vh] bg-blue-400">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/home" element={<p>Home</p>} />
+            <Route path="/home" element={<Home/>} />
             <Route path="*" element={<Navigate to='/home' />} />
           </Routes>
         </div>
