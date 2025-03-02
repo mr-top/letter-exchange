@@ -51,7 +51,7 @@ async function register (username, email, password, country) {
 }
 
 async function getOpenletters (id) {
-  const selectQuery = await query();
+  const selectQuery = await query('SELECT * FROM letters WHERE recipient_id IS NULL');
 
   if (selectQuery.success) {
     const result = selectQuery.result;
