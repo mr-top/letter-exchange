@@ -15,7 +15,10 @@ function LetterHistoryProvider (props) {
     const localLookup = lookup;
     async function fetchLetters () {
       if (localLookup.method === 'open') localLookup.id = loggedDetails.id;
-      setLetters(await axiosFetch(axios.post, '/letters', localLookup));
+      const result = await axiosFetch(axios.post, '/letters', localLookup);
+      if (result.success) {
+        setLetters(result.letters);
+      }
     }
     fetchLetters();
   }, [lookup]);
