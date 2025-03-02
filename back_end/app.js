@@ -33,7 +33,7 @@ app.use(session({
 
 app.use((req, res, next) => {
   res.locals.logged = req.session.logged;
-  res.locals.usedId = req.session.userId;
+  res.locals.userId = req.session.userId;
   next();
 });
 
@@ -69,7 +69,7 @@ app.post('/login', async (req, res) => {
   res.send(result);
 });
 
-app.post('/signout', (req, res) => {
+app.post('/signout', requiresAuth, (req, res) => {
   const {id} = req.body;
 
   delete req.body.logged;
@@ -83,7 +83,18 @@ app.post('/register', requiresAuth, async (req, res) => {
   const result = await dbFunctons.register(username, email, password, geo.countryCode);
 
   res.send(result);
-})
+});
+
+app.post('/letters', requiresAuth, async (req, res) => {
+  const {method, id} = req.body;
+  let result;
+  if (method !== 'open') {
+    result = await dbFunctons.getLetters(res.locals.userId, id);
+  } else {
+    result = await dbFunctons.getOpenletters(id);
+  }
+  res.send(result);
+});
 
 app.listen(5555, () => {
   console.log('started listening');

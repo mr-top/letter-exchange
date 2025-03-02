@@ -50,4 +50,26 @@ async function register (username, email, password, country) {
   }
 }
 
-module.exports = { login, register }
+async function getOpenletters (id) {
+  const selectQuery = await query();
+
+  if (selectQuery.success) {
+    const result = selectQuery.result;
+    return {success: true, letters: result.rows}
+  } else {
+    return {success: false}
+  }
+}
+
+async function getLetters (sourceId, targetId) {
+  const selectQuery = await query('SELECT * FROM letters WHERE sender_id = $2 AND recipient_id = $1', sourceId, targetId);
+
+  if (selectQuery.success) {
+    const result = selectQuery.result;
+    return {success: true, letters: result.rows}
+  } else {
+    return {success: false}
+  }
+}
+
+module.exports = { login, register, getOpenletters, getLetters}
