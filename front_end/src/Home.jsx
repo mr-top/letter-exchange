@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { LetterHistoryContext } from "./components/utils/LetterHistoryContext";
 
 import Letters from "./components/Letters";
+import Friends from "./components/Friends";
 
 function Home () {
   const {setLookup, letters} = useContext(LetterHistoryContext);
@@ -15,7 +16,7 @@ function Home () {
       <div className="flex-initial w-50 bg-red-400">
         <button onClick={() => setLookup({method: 'open'})}>Open Letters</button>
         <ul className="w-full h-fit bg-yellow-400">
-          
+          <Friends/>
         </ul>
       </div>
     </div>

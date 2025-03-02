@@ -72,4 +72,15 @@ async function getLetters (sourceId, targetId) {
   }
 }
 
-module.exports = { login, register, getOpenletters, getLetters}
+async function getFriends (id) {
+  const selectQuery = await query('SELECT * FROM users AS u JOIN relations AS r ON u.id = r.friend_id WHERE r.user_id = $1 AND r.confirmed = true', id)
+
+  if (selectQuery.success) {
+    const result = selectQuery.result;
+    return {success: true, friends: result.rows}
+  } else {
+    return {success: false}
+  }
+}
+
+module.exports = { login, register, getOpenletters, getLetters, getFriends}
