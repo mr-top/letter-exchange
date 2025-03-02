@@ -62,8 +62,11 @@ async function getOpenletters (id) {
 }
 
 async function getLetters (sourceId, targetId) {
+  console.log(sourceId);
+  console.log(targetId);
   const selectQuery = await query('SELECT * FROM letters WHERE sender_id = $2 AND recipient_id = $1', sourceId, targetId);
 
+  console.log(selectQuery);
   if (selectQuery.success) {
     const result = selectQuery.result;
     return {success: true, letters: result.rows}

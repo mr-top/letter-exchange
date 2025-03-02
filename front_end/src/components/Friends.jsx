@@ -5,7 +5,8 @@ import { UserContext } from './utils/UserContext';
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
 
-function Friends () {
+function Friends (props) {
+  const {setLookup} = props;
   const {loggedDetails} = useContext(UserContext);
   const [friends, setFriends] = useState([]);
 
@@ -21,7 +22,7 @@ function Friends () {
 
   return (
     <>
-      {friends.map(friend => <li key={friend.id}>
+      {friends.map(friend => <li key={friend.friend_id} onClick={() => setLookup({method: 'friend', id: friend.friend_id})}>
         {friend.username}
       </li>)}
     </>

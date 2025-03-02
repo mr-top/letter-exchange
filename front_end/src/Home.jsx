@@ -16,7 +16,7 @@ function Home () {
       <div className="flex-initial w-50 bg-red-400">
         <button onClick={() => setLookup({method: 'open'})}>Open Letters</button>
         <ul className="w-full h-fit bg-yellow-400">
-          <Friends/>
+          <Friends setLookup={setLookup}/>
         </ul>
       </div>
     </div>
