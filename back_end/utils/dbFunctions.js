@@ -83,4 +83,15 @@ async function getFriends (id) {
   }
 }
 
-module.exports = { login, register, getOpenletters, getLetters, getFriends}
+async function getProfile (id) {
+  const selectQuery = await query('SELECT * FROM users WHERE id = $1', id);
+
+  if (selectQuery.success && selectQuery.result.rowCount > 0) {
+    const result = selectQuery.result;
+    return {success: true, profile: result.rows[0]}
+  } else {
+    return {success: false}
+  }
+}
+
+module.exports = { login, register, getOpenletters, getLetters, getFriends, getProfile}

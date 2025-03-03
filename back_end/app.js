@@ -103,6 +103,13 @@ app.post('/friends', requiresAuth, async (req, res) => {
   res.send(result);
 });
 
+app.post('/profile', requiresAuth, async (req, res) => {
+  const {id} = req.body;
+
+  const result = await dbFunctons.getProfile(id);
+  res.send(result);
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });
