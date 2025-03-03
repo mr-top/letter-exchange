@@ -8,6 +8,7 @@ import Footer from "./components/footer/Footer"
 import Navbar from "./components/navbar/Navbar"
 import Login from "./components/Login"
 import Register from "./components/Register";
+import AuthProtected from "./components/utils/AuthProtected";
 
 function App() {
   const { loggedDetails } = useContext(UserContext);
@@ -23,7 +24,9 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/home" element={<Home/>} />
+            <Route element={<AuthProtected/>}>
+              <Route path="/home" element={<Home/>} />
+            </Route>
             <Route path="*" element={<Navigate to='/home' />} />
           </Routes>
         </div>
