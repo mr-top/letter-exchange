@@ -24,7 +24,7 @@ function LetterHistoryProvider (props) {
   }, [lookup]);
 
   return (
-    <LetterHistoryContext.Provider value={{setLookup, letters}}>
+    <LetterHistoryContext.Provider value={{setLookup, letters, lookup}}>
       {props.children}
     </LetterHistoryContext.Provider>
   )
