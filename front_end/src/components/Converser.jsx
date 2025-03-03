@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
@@ -6,6 +7,7 @@ import axiosFetch from "../utils/axiosFetch";
 import anonymous from '../assets/anonymous.png';
 
 function Converser ({lookup}) {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState({});
 
   useEffect(() => {
@@ -19,12 +21,12 @@ function Converser ({lookup}) {
   }, [lookup]);
 
   return (
-    <div className="flex-initial flex items-center px-2 w-40 bg-yellow-400">
+    <div className="flex-initial flex justify-around items-center px-2 w-50 bg-yellow-400">
       <div className="flex-initial rounded-full border-1 border-black size-12 overflow-hidden">
         <img src={profile.pictureUrl || anonymous} alt="profile picture" />
       </div>
-      <div className="flex-1">
-        <h2>{profile.username}</h2>
+      <div className="flex-initial">
+        <h2 className="text-lg link" onClick={() => navigate(`/profile/${lookup.id}`)}>{profile.username}</h2>
       </div>
     </div>
   )
