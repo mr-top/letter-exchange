@@ -47,6 +47,12 @@ Milestones
 13. Register route and page
 14. Navbar
 15. Friends browser
-16. Users browser
-17. Friend page with history of letter
-18. Compose letter 
+16. User page with history of letter
+17. Compose letter 
+18. Letter modal
+19. Letter content hidden until delivery
+20. Exchanged letters create mutual friends. letter to letter or open letter to letter
+21. Polish navbar, footer
+22. Polish menu
+23. Toggle switch to no longer receive letters from a user
+24. Delete history of letters 
