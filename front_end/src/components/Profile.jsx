@@ -23,7 +23,7 @@ function Profile({ id }) {
     }
 
     fetchProfile();
-  }, []);
+  }, [id]);
 
   return (
     <div className="flex-1 flex-col items-center min-h-100 p-6 bg-pink-400">
