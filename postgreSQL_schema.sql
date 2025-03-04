@@ -4,14 +4,17 @@ CREATE TABLE users (
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
   description VARCHAR(500),
-  country VARCHAR(2) NOT NULL
+  country VARCHAR(2) NOT NULL,
+  joined_date DATE NOT NULL DEFAULT NOW(),
+  dob DATE
 );
 
 CREATE TABLE letters (
   id SERIAL NOT NULL UNIQUE,
   sender_id INTEGER NOT NULL REFERENCES users(id),
-  recipient_id INTEGER REFERENCES users(id),
+  recipient_id INTEGER NOT NULL REFERENCES users(id),
   content TEXT NOT NULL,
+  posted_date TIMESTAMP NOT NULL DEFAULT NOW(),
   length VARCHAR(6)
 );
 
@@ -48,8 +51,3 @@ INSERT INTO letters (sender_id, recipient_id, content, length) VALUES
 (4, 5, 'Hello! this is my letter to five as i am four', 'long'),
 (1, 5, 'Hello! this is my letter to five as i am one', 'short'),
 (5, 1, 'Hello! this is my letter to one as i am five', 'short');
-
-INSERT INTO letters (sender_id, content, length) VALUES
-(1, 'Hello! this is my letter to two as i am one', 'short'),
-(2, 'Hello! this is my letter to one as i am two', 'short'),
-(5, 'Hello! this is my letter to three as i am one', 'medium');
