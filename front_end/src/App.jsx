@@ -4,6 +4,7 @@ import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom"
 import { UserContext } from './components/utils/UserContext';
 
 import Home from "./Home";
+import ProfileValidator from "./components/utils/ProfileValidator";
 import Footer from "./components/footer/Footer"
 import Navbar from "./components/navbar/Navbar"
 import Login from "./components/Login"
@@ -26,6 +27,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route element={<AuthProtected/>}>
               <Route path="/home" element={<Home/>} />
+              <Route path="/profile" element={<ProfileValidator/>}/>
+              <Route path="/profile/:id" element={<ProfileValidator/>}/>
             </Route>
             <Route path="*" element={<Navigate to='/home' />} />
           </Routes>
