@@ -5,6 +5,9 @@ CREATE TABLE users (
   password TEXT NOT NULL,
   description VARCHAR(500),
   country VARCHAR(2) NOT NULL,
+  city TEXT,
+  latitude VARCHAR(12),
+  longitude VARCHAR(12),
   joined_date DATE NOT NULL DEFAULT NOW(),
   dob DATE
 );
