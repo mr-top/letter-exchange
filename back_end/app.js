@@ -110,6 +110,14 @@ app.post('/profile', requiresAuth, async (req, res) => {
   res.send(result);
 });
 
+app.post('/compose', requiresAuth, async (req, res) => {
+  const {letterContent} = req.body;
+
+  // handle compose
+
+  res.send({success: true});
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });
