@@ -111,7 +111,7 @@ app.post('/profile', requiresAuth, async (req, res) => {
 });
 
 app.post('/compose', requiresAuth, async (req, res) => {
-  const {letterContent} = req.body;
+  const {letterContent, sourceId, targetId} = req.body;
 
   // handle compose
 
