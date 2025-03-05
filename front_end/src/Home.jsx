@@ -19,7 +19,7 @@ function Home() {
           <div className="flex-initial flex items-center w-25 bg-blue-700">
             <LetterFilter />
           </div>
-          <button className="btn" onClick={()=>document.getElementById('letter_modal').showModal()}>open modal</button>
+          {lookup.method ==='friend' && <button className="btn" onClick={()=>document.getElementById('letter_modal').showModal()}>open modal</button>}
         </div>
         <div className="flex-1 place-items-center overflow-y-auto grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 p-2 bg-green-500">
           <Letters letters={letters} />
@@ -31,7 +31,7 @@ function Home() {
           <Friends setLookup={setLookup} />
         </ul>
       </div>
-      <Compose/>
+      <Compose lookup={lookup}/>
     </div>
   )
 }

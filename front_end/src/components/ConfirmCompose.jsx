@@ -3,15 +3,15 @@ import { useState } from "react";
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
 
-function ConfirmCompose({letterContent}) {
+function ConfirmCompose({manifest}) {
   const [loading, setLoading] = useState(false);
 
   async function sendLetter () {
     setLoading(true);
-    const result = await axiosFetch(axios.post, '/compose', {letterContent});
+    const result = await axiosFetch(axios.post, '/compose', {...manifest});
     if (result.success) {
-      document.getElementById('send_modal').close()
-      document.getElementById('letter_modal').close()
+      document.getElementById('send_modal').close();
+      document.getElementById('letter_modal').close();
     } 
     setLoading(false);
   }

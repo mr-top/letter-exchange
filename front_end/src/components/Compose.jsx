@@ -1,8 +1,32 @@
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ConfirmCompose from "./ConfirmCompose";
 
-function Compose() {
+import { UserContext } from "./utils/UserContext";
+
+import axios from "axios";
+import axiosFetch from "../utils/axiosFetch";
+
+function Compose({lookup}) {
+  const { loggedDetails } = useContext(UserContext);
   const [letterContent, setLetterContent] = useState('');
+  const [targetId, setTargetId] = useState(lookup.id);
+  const [estimate, setEstimate] = useState('X');
+
+  useEffect(() => {
+    setTargetId(lookup.id);
+  }, [lookup.id]);
+
+  useEffect(() => {
+    setLetterContent('');
+    async function getEstimate () {
+      const result = await axiosFetch(axios.post, '/estimate', {sourceId: loggedDetails.id, targetId});
+      if (result.success) {
+        setEstimate(result.estimate);
+      }
+    }
+
+    getEstimate();
+  }, [targetId])
 
   return (
     <dialog id="letter_modal" className="modal">
@@ -20,6 +44,7 @@ function Compose() {
             <option>Long</option>
           </select>
         </fieldset>
+        <p>This letter will be delivered in {estimate}</p>
         <div className="modal-action">
           <button className="btn btn-primary" onClick={() => document.getElementById('send_modal').showModal()}>Send letter</button>
           <form method="dialog">
@@ -27,7 +52,7 @@ function Compose() {
           </form>
         </div>
       </div>
-      <ConfirmCompose letterContent={letterContent}/>
+      <ConfirmCompose manifest={{sourceId: loggedDetails.id, targetId, letterContent}}/>
     </dialog>
   )
 }
