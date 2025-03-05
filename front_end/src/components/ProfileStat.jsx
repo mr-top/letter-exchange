@@ -11,7 +11,7 @@ function ProfileStat({profile}) {
           <td>{profile.joined_date || 'Unknown'}</td>
         </tr>
         <tr>
-          <td>Letter reply rate</td>
+          <td>Sent and received letters</td>
           <td>Todo</td>
         </tr>
         <tr>
