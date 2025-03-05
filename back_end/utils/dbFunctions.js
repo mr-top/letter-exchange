@@ -32,9 +32,9 @@ async function login (username, password) {
   }
 }
 
-async function register (username, email, password, country) {
+async function register (username, email, password, geo) {
   const hashedPassword = await hashPassword(password);
-  const insertQuery = await query('INSERT INTO users (username, email, password, country) VALUES ($1, $2, $3, $4)', username, email, hashedPassword, country);
+  const insertQuery = await query('INSERT INTO users (username, email, password, country, city, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7)', username, email, hashedPassword, geo.countryCode, geo.city, geo.lat, geo.lon);
 
   if (insertQuery.success) {
     const result = insertQuery.result;

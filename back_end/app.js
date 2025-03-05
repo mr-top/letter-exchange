@@ -80,7 +80,7 @@ app.post('/signout', requiresAuth, (req, res) => {
 app.post('/register', requiresAuth, async (req, res) => {
   const {username, email, password, geo} = req.body;
 
-  const result = await dbFunctons.register(username, email, password, geo.countryCode);
+  const result = await dbFunctons.register(username, email, password, geo);
 
   res.send(result);
 });
