@@ -8,7 +8,7 @@ function ProfileStat({profile}) {
         </tr>
         <tr>
           <td>Joined date</td>
-          <td>{profile.joined_date || 'Unknown'}</td>
+          <td>{(profile.joined_date && new Date(profile.joined_date).toLocaleDateString()) || 'Unknown'}</td>
         </tr>
         <tr>
           <td>Sent and received letters</td>
