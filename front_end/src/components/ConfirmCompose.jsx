@@ -10,6 +10,7 @@ function ConfirmCompose({letterContent}) {
     setLoading(true);
     const result = await axiosFetch(axios.post, '/compose', {letterContent});
     if (result.success) {
+      document.getElementById('send_modal').close()
       document.getElementById('letter_modal').close()
     } 
     setLoading(false);
@@ -20,8 +21,8 @@ function ConfirmCompose({letterContent}) {
       <div className="modal-box">
         <p>Are you sure that you want to send this letter?</p>
         <div className="modal-action">
+        <button className="btn btn-primary" onClick={sendLetter} disabled={loading}>Confirm</button>
           <form method="dialog">
-            <button className="btn btn-primary" onClick={sendLetter} disabled={loading}>Confirm</button>
             <button className="btn">Close</button>
           </form>
         </div>
