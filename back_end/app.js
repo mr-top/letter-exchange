@@ -111,12 +111,17 @@ app.post('/profile', requiresAuth, async (req, res) => {
 });
 
 app.post('/compose', requiresAuth, async (req, res) => {
-  const {letterContent, sourceId, targetId} = req.body;
+  const {letterContent, letterLength, sourceId, targetId} = req.body;
 
-  // handle compose
-  console.log(await dbFunctons.getDistance(sourceId, targetId))
+  const distanceResult = await dbFunctons.getDistance(sourceId, targetId);
 
-  res.send({success: true});
+  if (distanceResult.success) {
+    const result = await dbFunctons.createLetter(sourceId, targetId, letterContent, letterLength, distanceResult.distanceKm);
+
+    res.send(result);
+  } else {
+    res.send(distanceResult);
+  }
 });
 
 app.post('/estimate', requiresAuth, async (req, res) => {

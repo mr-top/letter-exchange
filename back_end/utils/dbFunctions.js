@@ -118,4 +118,22 @@ async function getDistance (sourceId, targetId) {
   }
 }
 
-module.exports = { login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance}
+async function createLetter (sourceId, targetId, letterContent, letterLength, distanceKm) {
+  const estimateMseconds = distanceKm * 60 * 1000;
+  const estimateTimestamp = new Date(Date.now() + estimateMseconds).toJSON();
+
+  const insertQuery = await query('INSERT INTO letters (sender_id, recipient_id, content, length, arrival_date) VALUES ($1, $2, $3, $4, $5)', sourceId, targetId, letterContent, letterLength, estimateTimestamp);
+
+  if (insertQuery.success) {
+    const result = insertQuery.result;
+    if (result.rowCount > 0) {
+      return {success: true}
+    } else {
+      return {success: false}
+    }
+  } else {
+    return insertQuery;
+  }
+}
+
+module.exports = { login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter}
