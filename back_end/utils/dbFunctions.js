@@ -1,4 +1,5 @@
 const query = require('./query');
+const haversine = require('./haversine');
 const bcrypt = require('bcrypt');
 
 async function hashPassword (password) {
@@ -94,4 +95,27 @@ async function getProfile (id) {
   }
 }
 
-module.exports = { login, register, getOpenletters, getLetters, getFriends, getProfile}
+async function getDistance (sourceId, targetId) {
+  const selectQuerySource = await query('SELECT latitude, longitude FROM users WHERE id = $1', sourceId);
+  const selectQueryTarget = await query('SELECT latitude, longitude FROM users WHERE id = $1', targetId);
+  
+  if (selectQuerySource.success && selectQueryTarget.success) {
+    const resultSource = selectQuerySource.result.rows[0];
+    const resultTarget = selectQueryTarget.result.rows[0];
+
+    if (resultSource.latitude && resultSource.longitude) {
+      if (resultTarget.latitude && resultTarget.longitude) {
+        const distanceKm = haversine(resultSource.latitude, resultSource.longitude, resultTarget.latitude, resultTarget.longitude);
+        return {success: true, distanceKm}
+      } else {
+        return {success: false, msg: 'They have not set up their location'}
+      }
+    } else {
+      return {success: false, msg: 'You have not set up your location'}
+    }
+  } else {
+    return {success: false, msg: 'Users could not be compared as one of them was not found'}
+  }
+}
+
+module.exports = { login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance}

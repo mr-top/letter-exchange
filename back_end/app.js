@@ -114,6 +114,7 @@ app.post('/compose', requiresAuth, async (req, res) => {
   const {letterContent, sourceId, targetId} = req.body;
 
   // handle compose
+  console.log(await dbFunctons.getDistance(sourceId, targetId))
 
   res.send({success: true});
 });
