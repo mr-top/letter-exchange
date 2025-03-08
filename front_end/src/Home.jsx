@@ -33,7 +33,7 @@ function Home() {
           <Friends setLookup={setLookup} />
         </ul>
       </div>
-      <Compose lookup={lookup}/>
+      <Compose setLookup={setLookup} lookup={lookup}/>
     </div>
   )
 }

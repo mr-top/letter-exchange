@@ -6,7 +6,7 @@ import { UserContext } from "./utils/UserContext";
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
 
-function Compose({lookup}) {
+function Compose({setLookup, lookup}) {
   const { loggedDetails } = useContext(UserContext);
   const [letterContent, setLetterContent] = useState('');
   const [targetId, setTargetId] = useState(lookup.id);
@@ -52,7 +52,7 @@ function Compose({lookup}) {
           </form>
         </div>
       </div>
-      <ConfirmCompose manifest={{sourceId: loggedDetails.id, targetId, letterContent}}/>
+      <ConfirmCompose setLookup={setLookup} manifest={{sourceId: loggedDetails.id, targetId, letterContent}}/>
     </dialog>
   )
 }

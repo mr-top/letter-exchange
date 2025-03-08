@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
 
-function ConfirmCompose({manifest}) {
+function ConfirmCompose({setLookup, manifest}) {
   const [loading, setLoading] = useState(false);
 
   async function sendLetter () {
@@ -12,6 +12,7 @@ function ConfirmCompose({manifest}) {
     if (result.success) {
       document.getElementById('send_modal').close();
       document.getElementById('letter_modal').close();
+      setLookup(prev => {return {...prev}});
     } 
     setLoading(false);
   }
