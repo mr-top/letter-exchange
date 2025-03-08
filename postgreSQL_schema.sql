@@ -18,6 +18,7 @@ CREATE TABLE letters (
   recipient_id INTEGER NOT NULL REFERENCES users(id),
   content TEXT NOT NULL,
   posted_date TIMESTAMP NOT NULL DEFAULT NOW(),
+  arrival_date TIMESTAMP NOT NULL,
   length VARCHAR(6)
 );
 
