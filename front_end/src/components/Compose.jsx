@@ -21,7 +21,7 @@ function Compose({lookup}) {
     async function getEstimate () {
       const result = await axiosFetch(axios.post, '/estimate', {sourceId: loggedDetails.id, targetId});
       if (result.success) {
-        setEstimate(result.estimate);
+        setEstimate(result.hours);
       }
     }
 
@@ -44,7 +44,7 @@ function Compose({lookup}) {
             <option>Long</option>
           </select>
         </fieldset>
-        <p>This letter will be delivered in {estimate}</p>
+        <p>This letter will be delivered in {estimate} hours</p>
         <div className="modal-action">
           <button className="btn btn-primary" onClick={() => document.getElementById('send_modal').showModal()}>Send letter</button>
           <form method="dialog">

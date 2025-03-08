@@ -119,6 +119,18 @@ app.post('/compose', requiresAuth, async (req, res) => {
   res.send({success: true});
 });
 
+app.post('/estimate', requiresAuth, async (req, res) => {
+  const { sourceId, targetId } = req.body;
+
+  const result = await dbFunctons.getDistance(sourceId, targetId);
+  if (result.success) {
+    const hours = Math.ceil(result.distanceKm / 60);
+    res.send({success: true, hours});
+  } else {
+    res.send(result);
+  }
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });
