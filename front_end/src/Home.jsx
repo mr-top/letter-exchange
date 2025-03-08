@@ -1,6 +1,7 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 
 import { LetterHistoryContext } from "./components/utils/LetterHistoryContext";
+import { UserContext } from "./components/utils/UserContext";
 
 import Letters from "./components/Letters";
 import Friends from "./components/Friends";
@@ -10,6 +11,7 @@ import Compose from "./components/Compose";
 
 function Home() {
   const { setLookup, setSort, letters, lookup } = useContext(LetterHistoryContext);
+  const {loggedDetails} = useContext(UserContext);
 
   return (
     <div className="flex-1 flex min-h-120 bg-pink-400">
@@ -26,7 +28,7 @@ function Home() {
         </div>
       </div>
       <div className="flex-initial w-50 bg-red-400">
-        <button onClick={() => setLookup({ method: 'open' })}>Open Letters</button>
+        <button onClick={() => setLookup({ method: 'open', id: loggedDetails.id})}>Open Letters</button>
         <ul className="w-full h-fit bg-yellow-400">
           <Friends setLookup={setLookup} />
         </ul>
