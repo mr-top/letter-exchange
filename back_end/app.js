@@ -56,6 +56,13 @@ app.get('/session', (req, res) => {
   res.send({accessCount});
 });
 
+app.post('/ping', async (req, res) => {
+  const { id } = req.body;
+  const result = await dbFunctons.ping(id);
+
+  res.send(result);
+});
+
 app.post('/login', async (req, res) => {
   const {username, password} = req.body;
 
