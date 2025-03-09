@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom"
 
-import { UserContext } from './components/utils/UserContext';
+import { SitePingContext } from "./components/utils/SitePingProvider";
 
 import Home from "./Home";
 import ProfileValidator from "./components/utils/ProfileValidator";
@@ -12,12 +12,15 @@ import Register from "./components/Register";
 import AuthProtected from "./components/utils/AuthProtected";
 
 function App() {
-  const { loggedDetails } = useContext(UserContext);
-  console.log(loggedDetails);
+  const { countdown, connected, forceRefresh } = useContext(SitePingContext);
 
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">
+        {connected || 
+        <div>
+          <p>Connection not established! Refreshing page in {countdown} <button className='btn' onClick={forceRefresh}>Refresh now</button></p>
+        </div>}
         <div className="flex-initial bg-red-400">
           <Navbar />
         </div>
