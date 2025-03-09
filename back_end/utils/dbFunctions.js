@@ -19,12 +19,14 @@ async function ping(id) {
 }
 
 async function hashPassword(password) {
-  const hashedPassword = await bcrypt.hash(password, 2);
-  return hashedPassword;
+  // const hashedPassword = await bcrypt.hash(password, 2);
+  // return hashedPassword;
+  return password;
 }
 
 async function checkPassword(password, hashedPassword) {
-  return await bcrypt.compare(password, hashedPassword);
+  // return await bcrypt.compare(password, hashedPassword);
+  return password === hashedPassword;
 }
 
 async function login(username, password) {
