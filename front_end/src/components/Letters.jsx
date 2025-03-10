@@ -24,8 +24,8 @@ function Letters({ letters }) {
       })}
       <dialog id="letter-modal" className="modal">
         <div className="modal-box">
-          <h2 className="text-md">To: RECIPIENT_NAME</h2>
-          <h2 className="text-md">From: SENDER_NAME</h2>
+          <h2 className="text-md">To: {currentLetter.recipient_username || 'Everyone'}</h2>
+          <h2 className="text-md">From: {currentLetter.sender_username}</h2>
           <h2 className="text-md">Posted date: {currentLetter.posted_date}</h2>
           <p>{currentLetter.content}</p>
           <div className="modal-action">
