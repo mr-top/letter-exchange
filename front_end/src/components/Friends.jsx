@@ -22,8 +22,10 @@ function Friends (props) {
 
   return (
     <>
-      {friends.map(friend => <li key={friend.friend_id} onClick={() => setLookup({method: 'friend', id: friend.friend_id})}>
-        {friend.username}
+      {friends.map((friend, idx) => <li key={friend.friend_id} onClick={() => setLookup({method: 'friend', id: friend.friend_id})}>
+        <button className={`btn w-full ${idx % 2 === 0 ? 'bg-secondary' : 'bg-accent'}`}>
+          {friend.username}
+        </button>
       </li>)}
     </>
   )

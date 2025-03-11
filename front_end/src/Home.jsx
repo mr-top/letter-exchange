@@ -14,22 +14,23 @@ function Home() {
   const {loggedDetails} = useContext(UserContext);
 
   return (
-    <div className="flex-1 flex min-h-120 bg-pink-400">
-      <div className="flex-1 flex flex-col h-full max-h-120">
-        <div className="flex-initial flex h-14">
+    <div className="flex-1 flex min-h-120 bg-base-300 rounded-sm">
+      <div className="flex-1 flex flex-col h-full">
+        <div className="flex-initial flex items-center justify-around h-14 border-b-2 border-base-content">
           <Converser lookup={lookup} />
-          <div className="flex-initial flex items-center w-25 bg-blue-700">
+          <div className="flex-initial flex items-center w-35 space-x-2">
+            <p>Filter:</p>
             <LetterFilter />
           </div>
-          {lookup.method ==='friend' && <button className="btn" onClick={()=>document.getElementById('letter_modal').showModal()}>open modal</button>}
+          {lookup.method ==='friend' && <button className="btn flex-initial w-35 bg-secondary" onClick={()=>document.getElementById('letter_modal').showModal()}>Send a letter</button>}
         </div>
-        <div className="flex-1 place-items-center overflow-y-auto grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 p-2 bg-green-500">
+        <div className="flex-1 place-items-center overflow-y-auto grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 p-2">
           <Letters letters={letters} />
         </div>
       </div>
-      <div className="flex-initial w-50 bg-red-400">
-        <button onClick={() => setLookup({ method: 'open', id: loggedDetails.id})}>Open Letters</button>
-        <ul className="w-full h-fit bg-yellow-400">
+      <div className="flex-initial flex flex-col items-center w-50 border-l-2 border-base-content space-y-2 p-2">
+        <button className='btn' onClick={() => setLookup({ method: 'open', id: loggedDetails.id})}>Open Letters</button>
+        <ul className="w-full h-fit overflow-y-auto space-y-2">
           <Friends setLookup={setLookup} />
         </ul>
       </div>

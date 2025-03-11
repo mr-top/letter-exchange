@@ -21,10 +21,10 @@ function App() {
         <div>
           <p>Connection not established! Refreshing page in {countdown} <button className='btn' onClick={forceRefresh}>Refresh now</button></p>
         </div>}
-        <div className="flex-initial bg-red-400">
+        <div className="flex-initial">
           <Navbar />
         </div>
-        <div className="flex-1 flex justify-center p-2 items-centermin-h-[80vh] bg-blue-400">
+        <div className="flex-1 flex justify-center p-2">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -36,7 +36,7 @@ function App() {
             <Route path="*" element={<Navigate to='/home' />} />
           </Routes>
         </div>
-        <div className="flex-initial min-h-40 bg-yellow-400">
+        <div className="flex-initial min-h-40">
           <Footer />
         </div>
       </div>

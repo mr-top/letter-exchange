@@ -21,7 +21,7 @@ function Converser ({lookup}) {
   }, [lookup]);
 
   return (
-    <div className="flex-initial flex justify-around items-center px-2 w-50 bg-yellow-400">
+    <div className="flex-initial flex justify-around items-center px-2 w-50">
       <div className="flex-initial rounded-full border-1 border-black size-12 overflow-hidden">
         <img src={profile.pictureUrl || anonymous} alt="profile picture" />
       </div>
