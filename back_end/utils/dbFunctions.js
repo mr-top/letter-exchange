@@ -92,7 +92,7 @@ async function getLetters(sourceId, targetId) {
 }
 
 async function getFriends(id) {
-  const selectQuery = await query('SELECT * FROM users AS u JOIN relations AS r ON u.id = r.friend_id WHERE r.user_id = $1 AND r.confirmed = true', id)
+  const selectQuery = await query('SELECT * FROM users AS u JOIN relations AS r ON u.id = r.friend_id WHERE r.user_id = $1', id)
 
   if (selectQuery.success) {
     const result = selectQuery.result;
