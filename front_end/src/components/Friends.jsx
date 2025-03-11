@@ -14,7 +14,17 @@ function Friends (props) {
     async function fetchFriends () {
       const result = await axiosFetch(axios.post, '/friends', {id: loggedDetails.id});
       if (result.success) {
-        setFriends(result.friends);
+        const friends = result.friends;
+        const sortedFriends = friends.sort((a, b) => {
+          if (a.confirmed) {
+            return 1;
+          } else if (b.confirmed) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+        setFriends(sortedFriends);
       }
     }
     fetchFriends();
@@ -23,7 +33,7 @@ function Friends (props) {
   return (
     <>
       {friends.map((friend, idx) => <li key={friend.friend_id} onClick={() => setLookup({method: 'friend', id: friend.friend_id})}>
-        <button className={`btn w-full ${idx % 2 === 0 ? 'bg-secondary' : 'bg-accent'}`}>
+        <button className={`btn w-full ${idx % 2 === 0 ? 'bg-secondary' : 'bg-accent'} ${friend.confirmed || 'opacity-75'}`}>
           {friend.username}
         </button>
       </li>)}
