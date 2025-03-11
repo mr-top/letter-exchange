@@ -22,10 +22,10 @@ function Home() {
             <p>Filter:</p>
             <LetterFilter />
           </div>
-          {lookup.method ==='friend' && <button className="btn flex-initial w-35 bg-secondary" onClick={()=>document.getElementById('letter_modal').showModal()}>Send a letter</button>}
+          {lookup.method ==='friend' && <button className="btn flex-initial w-35 bg-secondary" onClick={()=>document.getElementById('compose_modal').showModal()}>Send a letter</button>}
         </div>
         <div className="flex-1 place-items-center overflow-y-auto grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 p-2">
-          <Letters letters={letters} />
+          <Letters setLookup={setLookup} lookup={lookup} letters={letters} />
         </div>
       </div>
       <div className="flex-initial flex flex-col items-center w-50 border-l-2 border-base-content space-y-2 p-2">

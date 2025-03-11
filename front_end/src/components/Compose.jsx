@@ -29,7 +29,7 @@ function Compose({setLookup, lookup}) {
   }, [targetId])
 
   return (
-    <dialog id="letter_modal" className="modal">
+    <dialog id="compose_modal" className="modal">
       <div className="modal-box">
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Letter: Required (must follow guidelines)</legend>

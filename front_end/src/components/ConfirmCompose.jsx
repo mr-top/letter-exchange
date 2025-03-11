@@ -11,7 +11,7 @@ function ConfirmCompose({setLookup, manifest}) {
     const result = await axiosFetch(axios.post, '/compose', {...manifest});
     if (result.success) {
       document.getElementById('send_modal').close();
-      document.getElementById('letter_modal').close();
+      document.getElementById('compose_modal').close();
       setLookup(prev => {return {...prev}});
     } 
     setLoading(false);
