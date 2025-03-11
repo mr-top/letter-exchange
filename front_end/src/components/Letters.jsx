@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import checkTime from "../utils/checkTime";
 
-function Letters({ setLookup, lookup, letters }) {
+function Letters({ setLookup, lookup, letters, loggedDetails }) {
   const [currentLetter, setCurrentLetter] = useState({});
 
   function openLetter(letter) {
@@ -42,7 +42,7 @@ return (
         <h2 className="text-md">Posted date: {currentLetter.posted_date}</h2>
         <p>{currentLetter.content}</p>
         <div className="modal-action">
-          <button className="btn btn-accent" onClick={() => replyLetter(currentLetter.sender_id)}>Reply</button>
+          {currentLetter.sender_id === loggedDetails.id || <button className="btn btn-accent" onClick={() => replyLetter(currentLetter.sender_id)}>Reply</button>}
           <form method="dialog">
             <button className="btn">Close</button>
           </form>
