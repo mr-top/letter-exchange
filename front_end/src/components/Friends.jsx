@@ -6,7 +6,7 @@ import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
 
 function Friends (props) {
-  const {setLookup} = props;
+  const {setLookup, friendsRefresh} = props;
   const {loggedDetails} = useContext(UserContext);
   const [friends, setFriends] = useState([]);
 
@@ -27,12 +27,13 @@ function Friends (props) {
         setFriends(sortedFriends);
       }
     }
+    
     fetchFriends();
-  }, []);
+  }, [friendsRefresh]);
 
   return (
     <>
-      {friends.map((friend, idx) => <li key={friend.friend_id} onClick={() => setLookup({method: 'friend', id: friend.friend_id})}>
+      {friends.map((friend, idx) => <li key={friend.friend_id} onClick={() => setLookup({method: 'friend', id: friend.friend_id, newFriend: !friend.confirmed})}>
         <button className={`btn w-full ${idx % 2 === 0 ? 'bg-secondary' : 'bg-accent'} ${friend.confirmed || 'opacity-75'}`}>
           {friend.username}
         </button>
