@@ -143,6 +143,14 @@ app.post('/estimate', requiresAuth, async (req, res) => {
   }
 });
 
+app.post('/reject', requiresAuth, async (req, res) => {
+  const {sourceId, targetId} = req.body;
+
+  const result = await dbFunctons.rejectUser(sourceId, targetId);
+
+  res.send(result);
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });

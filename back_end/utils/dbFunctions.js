@@ -154,4 +154,30 @@ async function createLetter(sourceId, targetId, letterContent, letterLength, dis
   }
 }
 
-module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter }
+async function rejectUser(sourceId, targetId) {
+  const selectQuery = await query('SELECT * FROM relations WHERE user_id = $1 AND friend_id = $2 AND confirmed = false', sourceId, targetId);
+
+  if (selectQuery.success) {
+    const selectResult = selectQuery.result;
+    if (selectResult.rowCount > 0) {
+      const deleteQuery = await query('DELETE FROM relations WHERE user_id = $1 AND friend_id = $2 AND confirmed = false', sourceId, targetId);
+
+      if (deleteQuery.success) {
+        const updateQuery = await query('UPDATE relations SET confirmed = false, restrict = true WHERE user_id = $2 AND friend_id = $1 AND confirmed = true', sourceId, targetId);
+
+        if (updateQuery.success && updateQuery.result.rowCount > 0) {
+          return { success: true, msg: 'Relation deleted and target user restricted' }
+        }
+
+        // this update doesn't always have to run correct
+        // job queue to remove restrict column from relations row after few days. no idea
+      }
+
+      return { success: true, msg: 'Relation deleted' }
+    }
+  }
+
+  return { success: false, msg: 'Relation not found or some other error happened' }
+}
+
+module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser }
