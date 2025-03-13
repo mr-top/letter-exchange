@@ -1,7 +1,7 @@
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
 
-function RejectButton({ setFriendsRefresh, setLookup, lookup, loggedDetails }) {
+function DeleteButton({ setFriendsRefresh, setLookup, lookup, loggedDetails }) {
 
   async function rejectUser() {
     if (lookup.newFriend) {
@@ -19,7 +19,7 @@ function RejectButton({ setFriendsRefresh, setLookup, lookup, loggedDetails }) {
 
   return (
     <>
-      <button className="btn flex-initial w-35 btn-warning" onClick={() => document.getElementById('delete_modal').showModal()}>Reject</button>
+      <button className="btn flex-initial w-35 btn-warning" onClick={() => document.getElementById('delete_modal').showModal()}>Delete</button>
       <dialog id="delete_modal" className="modal">
         <div className="modal-box">
           <p className="py-4">Are you sure you want to delete this user?</p>
@@ -35,4 +35,4 @@ function RejectButton({ setFriendsRefresh, setLookup, lookup, loggedDetails }) {
   )
 }
 
-export default RejectButton;
+export default DeleteButton;
