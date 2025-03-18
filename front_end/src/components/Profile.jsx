@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+import Compose from "./Compose";
+
+import { LetterHistoryContext } from "./utils/LetterHistoryContext";
 
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
@@ -9,6 +13,7 @@ import getFlagEmoji from '../utils/getFlagEmoji';
 import ProfileStat from "./ProfileStat";
 
 function Profile({ id }) {
+  const {lookup, setLookup} = useContext(LetterHistoryContext);
   const navigate = useNavigate();
   const [profile, setProfile] = useState({});
 
@@ -17,6 +22,8 @@ function Profile({ id }) {
       const result = await axiosFetch(axios.post, '/profile', { id });
       if (result.success) {
         setProfile(result.profile);
+
+        setLookup({method: 'friend', id: result.profile.id});
       } else {
         navigate('/home');
       }
@@ -45,7 +52,8 @@ function Profile({ id }) {
           <ProfileStat profile={profile}/>
         </div>
         <div className="flex-1/6 flex justify-center items-center">
-          <button className="btn btn-accent">Compose a letter</button>
+          <button className="btn btn-accent" onClick={() => document.getElementById('compose_modal').showModal()}>Compose a letter</button>
+          <Compose lookup={lookup} setLookup={setLookup}/>
         </div>
       </div>
     </div>
