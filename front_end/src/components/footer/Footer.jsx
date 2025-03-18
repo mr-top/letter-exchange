@@ -1,6 +1,6 @@
 function Footer (){
   return (
-    <div className="flex flex-col space-y-4 p-2 sm:flex-row sm:justify-around sm:items-center w-full min-h-40 bg-primary font-primary">
+    <div className="flex flex-col space-y-4 p-2 sm:flex-row sm:justify-around w-full min-h-40 bg-primary text-primary-content border-t-1 border-base-content">
       <ul className="flex-initial">
         <h2 className="font-bold opacity-75">Navigation</h2>
         <p>Introduction</p>

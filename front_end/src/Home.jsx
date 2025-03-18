@@ -16,9 +16,9 @@ function Home() {
   const {loggedDetails} = useContext(UserContext);
 
   return (
-    <div className="flex-1 flex min-h-120 bg-base-300 rounded-sm">
+    <div className="flex-1 flex min-h-120 rounded-sm">
       <div className="flex-1 flex flex-col h-full">
-        <div className="flex-initial flex items-center justify-around h-14 border-b-2 border-base-content">
+        <div className="flex-initial flex items-center justify-around h-14 border-b-1 border-base-content">
           <Converser lookup={lookup} />
           <div className="flex-initial flex items-center w-35 space-x-2">
             <p>Filter:</p>
@@ -31,8 +31,8 @@ function Home() {
           <Letters setLookup={setLookup} lookup={lookup} letters={letters} loggedDetails={loggedDetails}/>
         </div>
       </div>
-      <div className="flex-initial flex flex-col items-center w-50 border-l-2 border-base-content space-y-2 p-2">
-        <button className='btn' onClick={() => setLookup({ method: 'open', id: loggedDetails.id})}>Open Letters</button>
+      <div className="flex-initial flex flex-col items-center w-50 border-l-1 border-base-content space-y-2 p-2">
+        <button className='btn btn-neutral' onClick={() => setLookup({ method: 'open', id: loggedDetails.id})}>Open Letters</button>
         <ul className="w-full h-fit overflow-y-auto space-y-2">
           <Friends setLookup={setLookup} friendsRefresh={friendsRefresh}/>
         </ul>

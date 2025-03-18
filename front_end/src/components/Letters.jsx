@@ -29,7 +29,7 @@ return (
       const letterDisabled = checkTime(letter.arrival_date);
       letter.posted_date = new Date(letter.posted_date).toLocaleString();
       return (
-        <button key={letter.id} className="btn w-32 h-20" onClick={() => openLetter(letter)} disabled={letterDisabled}>
+        <button key={letter.id} className="btn w-32 h-20 btn-neutral" onClick={() => openLetter(letter)} disabled={letterDisabled}>
           <p>Basic Letter</p>
           <p>{letter.posted_date}</p>
         </button>
