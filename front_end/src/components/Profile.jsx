@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import Compose from "./Compose";
 
@@ -12,8 +12,8 @@ import anonymous from '../assets/anonymous.png';
 import getFlagEmoji from '../utils/getFlagEmoji';
 import ProfileStat from "./ProfileStat";
 
-function Profile({ id }) {
-  const {lookup, setLookup} = useContext(LetterHistoryContext);
+function Profile({ id, ownProfile }) {
+  const { lookup, setLookup } = useContext(LetterHistoryContext);
   const navigate = useNavigate();
   const [profile, setProfile] = useState({});
 
@@ -23,7 +23,9 @@ function Profile({ id }) {
       if (result.success) {
         setProfile(result.profile);
 
-        setLookup({method: 'friend', id: result.profile.id});
+        if (!ownProfile) {
+          setLookup({ method: 'friend', id: result.profile.id });
+        }
       } else {
         navigate('/home');
       }
@@ -49,11 +51,18 @@ function Profile({ id }) {
           <p className="text-lg">"{profile.quote || 'No quote provided'}"</p>
         </div>
         <div className="flex-3/6 flex justify-center items-center">
-          <ProfileStat profile={profile}/>
+          <ProfileStat profile={profile} />
         </div>
         <div className="flex-1/6 flex justify-center items-center">
-          <button className="btn btn-accent" onClick={() => document.getElementById('compose_modal').showModal()}>Compose a letter</button>
-          <Compose lookup={lookup} setLookup={setLookup}/>
+          {ownProfile ?
+            <>
+              <Link to='/profile/settings'><button className="btn btn-accent">Settings</button></Link>
+            </> :
+            <>
+              <button className="btn btn-accent" onClick={() => document.getElementById('compose_modal').showModal()}>Compose a letter</button>
+              <Compose lookup={lookup} setLookup={setLookup} />
+            </>
+          }
         </div>
       </div>
     </div>
