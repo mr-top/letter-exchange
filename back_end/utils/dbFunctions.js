@@ -70,7 +70,7 @@ async function register(username, email, password, geo) {
 }
 
 async function getOpenletters(id) {
-  const selectQuery = await query('SELECT u1.username AS sender_username, letters.* FROM letters JOIN users AS u1 ON u1.id = letters.sender_id WHERE recipient_id IS NULL');
+  const selectQuery = await query('SELECT u1.username AS sender_username, u1.country AS sender_country, letters.* FROM letters JOIN users AS u1 ON u1.id = letters.sender_id WHERE recipient_id IS NULL');
 
   if (selectQuery.success) {
     const result = selectQuery.result;
@@ -81,7 +81,7 @@ async function getOpenletters(id) {
 }
 
 async function getLetters(sourceId, targetId) {
-  const selectQuery = await query('SELECT u1.username AS sender_username, u2.username AS recipient_username, l.* FROM letters AS l JOIN users AS u1 ON u1.id = l.sender_id JOIN users AS u2 ON u2.id = l.recipient_id WHERE l.sender_id = $2 AND l.recipient_id = $1 OR l.sender_id = $1 AND l.recipient_id = $2', sourceId, targetId);
+  const selectQuery = await query('SELECT u1.username AS sender_username, u1.country AS sender_country, u2.username AS recipient_username, u2.country AS recipient_country, u2.city AS recipient_city, l.* FROM letters AS l JOIN users AS u1 ON u1.id = l.sender_id JOIN users AS u2 ON u2.id = l.recipient_id WHERE l.sender_id = $2 AND l.recipient_id = $1 OR l.sender_id = $1 AND l.recipient_id = $2', sourceId, targetId);
 
   if (selectQuery.success) {
     const result = selectQuery.result;

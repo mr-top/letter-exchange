@@ -32,7 +32,7 @@ function Letters({ setLookup, lookup, letters, loggedDetails }) {
           <button key={letter.id} className="btn w-40 h-24 flex flex-col px-2 py-1 bg-yellow-50" onClick={() => openLetter(letter)} disabled={letterDisabled}>
             <div className="flex-5/12 flex justify-between items-center w-full">
               <div className="flex-initial border-1 border-black rounded-2xl w-12 h-8">
-                <p className="text-[9px]">XX</p>
+                <p className="text-[9px]">{letter.sender_country}</p>
                 <p className="text-[7px]">Post office</p>
               </div>
               <div className="flex-initial border-1 border-black bg-yellow-200 w-6 h-8">
