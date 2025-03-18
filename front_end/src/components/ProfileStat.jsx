@@ -4,7 +4,7 @@ function ProfileStat({profile}) {
       <tbody>
         <tr>
           <td>Date of birth</td>
-          <td>{profile.dob || 'Unknown'}</td>
+          <td>{(profile.dob && new Date(profile.dob).toLocaleDateString()) || 'Unknown'}</td>
         </tr>
         <tr>
           <td>Joined date</td>
@@ -20,7 +20,7 @@ function ProfileStat({profile}) {
         </tr>
         <tr>
           <td>Languages</td>
-          <td>Swahili<br />English</td>
+          <td>Todo</td>
         </tr>
       </tbody>
     </table>

@@ -26,24 +26,26 @@ function Profile({ id }) {
   }, [id]);
 
   return (
-    <div className="flex-1 flex-col items-center min-h-100 p-6 bg-pink-400">
-      <div className="flex flex-col items-center h-full space-y-2">
-        <div className="flex-initial flex space-x-4">
-          <div className="flex-initial rounded-full border-1 border-black size-16 overflow-hidden">
-            <img src={anonymous} alt="" />
+    <div className="flex justify-center min-h-120 w-full p-4">
+      <div className="flex-initial flex flex-col h-full w-80 border-1 border-base-content">
+        <div className="flex-1/6 flex h-20 w-full pt-5">
+          <div className="flex-1/3 flex justify-end items-center h-full">
+            <div className="flex-initial size-18 rounded-full overflow-hidden border-1 border-base-content">
+              <img src={profile.pictureUrl || anonymous} alt="" />
+            </div>
           </div>
-          <div className="flex-initial flex items-center">
-            <p className="text-xl">{profile.username} {getFlagEmoji(profile.country || 'XX')}</p>
+          <div className="flex-2/3 flex justify-start items-center h-full px-6">
+            <h2 className="text-2xl">{profile.username} {getFlagEmoji(profile.country || 'XX')}</h2>
           </div>
         </div>
-        <div className="flex-1 flex flex-col w-60 rounded-lg bg-red-400">
-          <div className="flex-initial flex justify-center items-center min-h-16 bg-yellow-400">
-            <p>{profile.quote || 'No quote provided'}</p>
-          </div>
-          <div className="flex-1 flex flex-col justify-around h-60 bg-blue-400 p-2">
-            <ProfileStat profile={profile}/>
-            <button className="btn btn-sm mx-8 bg-yellow-500">Compose a letter</button>
-          </div>
+        <div className="flex-1/6 flex justify-center items-center">
+          <p className="text-lg">"{profile.quote || 'No quote provided'}"</p>
+        </div>
+        <div className="flex-3/6 flex justify-center items-center">
+          <ProfileStat profile={profile}/>
+        </div>
+        <div className="flex-1/6 flex justify-center items-center">
+          <button className="btn btn-accent">Compose a letter</button>
         </div>
       </div>
     </div>
