@@ -10,6 +10,7 @@ import Navbar from "./components/navbar/Navbar"
 import Login from "./components/Login"
 import Register from "./components/Register";
 import AuthProtected from "./components/utils/AuthProtected";
+import ProfileSettings from "./components/ProfileSettings";
 
 function App() {
   const { countdown, connected, forceRefresh } = useContext(SitePingContext);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route element={<AuthProtected/>}>
               <Route path="/home" element={<Home/>} />
+              <Route path="/profile/settings" element={<ProfileSettings/>}></Route>
               <Route path="/profile" element={<ProfileValidator/>}/>
               <Route path="/profile/:id" element={<ProfileValidator/>}/>
             </Route>
