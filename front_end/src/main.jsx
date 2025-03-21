@@ -9,6 +9,9 @@ import { SitePingProvider } from './components/utils/SitePingProvider.jsx';
 
 axios.defaults.withCredentials = true;
 
+const checkIsDarkSchemePreferred = () => window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
+document.querySelector('html').setAttribute('data-theme', localStorage.getItem('theme') || (checkIsDarkSchemePreferred() ? 'dark' : 'light'));
+
 createRoot(document.getElementById('root')).render(
   <UserProvider>
     <SitePingProvider>
