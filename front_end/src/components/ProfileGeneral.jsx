@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { UserContext } from "./utils/UserContext";
 
@@ -9,11 +10,22 @@ import getGeo from "../utils/getGeo";
 import anonymous from '../assets/anonymous.png';
 
 function ProfileGeneral() {
+  const navigate = useNavigate();
   const { loggedDetails } = useContext(UserContext);
   const [quote, setQuote] = useState('');
   const [profile, setProfile] = useState({});
+  const [changeStatus, setChangeStatus] = useState({quoteChanged: false, locationChanged: false});
 
   useEffect(() => {
+    const keyPressed = () => {
+      setChangeStatus(prev => {return {...prev, quoteChanged: true}});
+      document.getElementById('quote_id').removeEventListener('keypress', keyPressed);
+      return () => {
+        console.log('event removed');
+      }
+    }
+    document.getElementById('quote_id').addEventListener('keypress', keyPressed)
+
     async function fetchProfile () {
       const result = await axiosFetch(axios.post, '/profile', {id: loggedDetails.id});
 
@@ -31,25 +43,33 @@ function ProfileGeneral() {
 
   useEffect(() => {
     profile.description = quote;
+    
   }, [quote])
 
   async function updateLocation() {
     const geo = await getGeo();
 
-    console.log(profile);
-    
     if (geo.status === 'success') {
       profile.latitude = geo.lat;
       profile.longitude = geo.lon;
       profile.country = geo.countryCode;
       profile.city = geo.city;
-    }
 
-    console.log(profile);
+      setChangeStatus(prev => {return {...prev, locationChanged: true}});
+    }
   }
 
   async function save() {
-    console.log(profile);
+    const somethingChanged = Object.values(changeStatus).some(status => status);
+    
+    if (somethingChanged) {
+      const result = await axiosFetch(axios.post, '/save', {changeStatus, profile});
+      if (result.success) {
+        navigate(0);
+      }
+    } else {
+      // no changes were made
+    }
   }
 
   return (
@@ -65,7 +85,7 @@ function ProfileGeneral() {
 
       <div>
         <label className="text-sm opacity-70">Quote</label>
-        <textarea type="text" value={quote || ''} onChange={e => setQuote(e.currentTarget.value)} className="textarea h-20" />
+        <textarea id='quote_id' type="text" value={quote || ''} onChange={e => setQuote(e.currentTarget.value)} className="textarea h-20" />
       </div>
 
       <div>
