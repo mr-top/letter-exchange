@@ -15,11 +15,11 @@ function ProfileGeneral() {
   const [quote, setQuote] = useState('');
   const [profile, setProfile] = useState({});
   const [changeStatus, setChangeStatus] = useState({quoteChanged: false, locationChanged: false});
+  const [error, setError] = useState({});
 
   useEffect(() => {
     const keyPressed = () => {
       setChangeStatus(prev => {return {...prev, quoteChanged: true}});
-      document.getElementById('quote_id').removeEventListener('keypress', keyPressed);
       return () => {
         console.log('event removed');
       }
@@ -65,10 +65,35 @@ function ProfileGeneral() {
     if (somethingChanged) {
       const result = await axiosFetch(axios.post, '/save', {changeStatus, profile});
       if (result.success) {
-        navigate(0);
+        setError({});
+        for (let status in changeStatus) {
+          setChangeStatus(prev => {
+            prev[status] = false;
+            return prev;
+          });
+        }
+
+        if (result.errorList?.length > 0) {
+          setError(prev => {return {...prev, someChangeError: true}});
+          
+          for (let idx = 0; idx < result.errorList.length; idx++) {
+            const currentError = result.errorList[idx];
+            switch (currentError[0]) {
+              case 'quote':
+                setChangeStatus(prev => {return {...prev, quoteChanged: true}});
+                setError(prev => {return {...prev, quoteError: true}});
+                break;
+              case 'location':
+                setChangeStatus(prev => {return {...prev, locationChanged: true}});
+                setError(prev => {return {...prev, locationError: true}});
+                break;
+            }
+          }
+        }
       }
     } else {
       // no changes were made
+      setError(prev => {return {...prev, noChangeError: true}});
     }
   }
 
@@ -84,18 +109,20 @@ function ProfileGeneral() {
       </div>
 
       <div>
-        <label className="text-sm opacity-70">Quote</label>
+        <label className="text-sm opacity-70">Quote {error.quoteError && '(Error occured)'}</label>
         <textarea id='quote_id' type="text" value={quote || ''} onChange={e => setQuote(e.currentTarget.value)} className="textarea h-20" />
       </div>
 
       <div>
-        <label className="text-sm opacity-70">Location</label>
+        <label className="text-sm opacity-70">Location {error.locationError && '(Error occured)'}</label>
         <div className="flex space-x-2">
           <input type="text" value={`${profile.country}, ${profile.city}`} className="flex-1 input" disabled={true}/>
           <input onClick={updateLocation} type="button" value={'Update Location'} className="flex-initial btn" />
         </div>
       </div>
 
+      {error.noChangeError && <p className="text-sm opacity-70">Nothing has been changed</p>}
+      {error.someChangeError && <p className="text-sm opacity-70">Only some changes were saved</p>}
       <input onClick={save} type="button" value={'Save Changes'} className="btn btn-accent" />
     </>
   )
