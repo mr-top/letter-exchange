@@ -180,4 +180,45 @@ async function rejectUser(sourceId, targetId) {
   return { success: false, msg: 'Relation not found or some other error happened' }
 }
 
-module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser }
+async function saveChanges(statusChanges, profile) {
+  const statusArray = Object.entries(statusChanges).filter(status => status[1]);
+  const somethingChanged = statusArray;
+  const errorList = [];
+
+  if (somethingChanged) {
+    for (let idx = 0; idx < statusArray.length; idx++) {
+      const currentStatus = statusArray[idx];
+      let success;
+      switch (currentStatus[0]) {
+        case 'quoteChanged':
+          success = await saveQuote(profile.id, profile.description);
+          if (!success) errorList.push(['quote', 'Failed to save quote']); 
+          break;
+        case 'locationChanged':
+          success = await saveLocation(profile.id, profile.country, profile.city, profile.latitude, profile.longitude);
+          if (!success) errorList.push(['location', 'Failed to save location']);
+          break;
+      }
+    }
+    
+    const allSaved = errorList.length <= 0;
+
+    return {success: true, msg: allSaved ? 'All changes saved' : 'One or more errors occured', errorList}
+  } else {
+    return {success: false, msg: 'Nothing has changed as nothing to change'}
+  }
+}
+
+async function saveQuote(id, quote) {
+  const updateQuery = await query('UPDATE users SET description = $2 WHERE id = $1', id, quote);
+
+  return updateQuery.result?.rowCount > 0;
+}
+
+async function saveLocation(id, country, city, lat, lon) {
+  const updateQuery = await query('UPDATE users SET country = $2, city = $3, latitude = $4, longitude = $5 WHERE id = $1', id, country, city, lat, lon);
+
+  return updateQuery.result?.rowCount > 0;
+}
+
+module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser, saveChanges }

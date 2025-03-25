@@ -151,6 +151,14 @@ app.post('/reject', requiresAuth, async (req, res) => {
   res.send(result);
 });
 
+app.post('/save', requiresAuth, async (req, res) => {
+  const {changeStatus, profile} = req.body;
+
+  const result = await dbFunctons.saveChanges(changeStatus, profile);
+
+  res.send(result);
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });
