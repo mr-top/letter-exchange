@@ -192,7 +192,7 @@ async function saveChanges(statusChanges, profile) {
       switch (currentStatus[0]) {
         case 'quoteChanged':
           success = await saveQuote(profile.id, profile.description);
-          if (!success) errorList.push(['quote', 'Failed to save quote']); 
+          if (!success) errorList.push(['quote', 'Failed to save quote']);
           break;
         case 'locationChanged':
           success = await saveLocation(profile.id, profile.country, profile.city, profile.latitude, profile.longitude);
@@ -200,12 +200,12 @@ async function saveChanges(statusChanges, profile) {
           break;
       }
     }
-    
+
     const allSaved = errorList.length <= 0;
 
-    return {success: true, msg: allSaved ? 'All changes saved' : 'One or more errors occured', errorList}
+    return { success: true, msg: allSaved ? 'All changes saved' : 'One or more errors occured', errorList }
   } else {
-    return {success: false, msg: 'Nothing has changed as nothing to change'}
+    return { success: false, msg: 'Nothing has changed as nothing to change' }
   }
 }
 
@@ -221,6 +221,79 @@ async function saveLocation(id, country, city, lat, lon) {
   return updateQuery.result?.rowCount > 0;
 }
 
+async function saveChangesPrivacy(id, statusChanges, acceptingFriends, acceptingLetters, usersToRemove) {
+  const statusArray = Object.entries(statusChanges).filter(status => status[1]);
+  const somethingChanged = statusArray;
+  const errorList = [];
+
+  let modifySuccess;
+  let allModified;
+
+  if (somethingChanged) {
+    for (let idx = 0; idx < statusArray.length; idx++) {
+      const currentStatus = statusArray[idx];
+      let success;
+      switch (currentStatus[0]) {
+        case 'lettersAcceptChanged':
+          success = await lettersToggle(id, acceptingLetters);
+          if (!success) errorList.push(['toggleLetters', 'Failed to save letters toggle']);
+          break;
+        case 'friendsAcceptChanged':
+          success = await friendsToggle(id, acceptingFriends);
+          if (!success) errorList.push(['toggleFriends', 'Failed to save friends toggle']);
+          break;
+        case 'blockedListChanged':
+          const result = await modifyBlockList(id, usersToRemove);
+          modifySuccess = result.modifySuccess;
+          allModified = result.allModified;
+          if (!modifySuccess) errorList.push(['blockList', 'Failed to save block list mod']);
+          break;
+      }
+    }
+
+    const allSaved = errorList.length <= 0;
+
+    return { success: true, msg: allSaved ? 'All changes saved' : 'One or more errors occured', errorList, usersRemoved: modifySuccess && (allModified ? 'all' : 'some')}
+  } else {
+    return { success: false, msg: 'Nothing has changed as nothing to change' }
+  }
+}
+
+async function lettersToggle(id, value) {
+  const updateQuery = await query('UPDATE users SET accepting_letters = $2 WHERE id = $1', id, value);
+
+  return updateQuery.result?.rowCount > 0;
+}
+
+async function friendsToggle(id, value) {
+  const updateQuery = await query('UPDATE users SET accepting_friends = $2 WHERE id = $1', id, value);
+
+  return updateQuery.result?.rowCount > 0;
+}
+
+async function modifyBlockList(id, blocksToRemove) {
+  const blockedUsersResult = await getBlockedUsers(id);
+
+  if (blockedUsersResult.success) {
+    const blockedUsersId = blockedUsersResult.list.map(user => user.friend_id);
+
+    blocksToRemove.map(async personId => {
+      let result;
+      if (blockedUsersId.includes(personId)) {
+        result = await query('UPDATE relations SET restrict = false WHERE user_id = $1 AND friend_id = $2', id, personId);
+      } else {
+        result = await query('INSERT INTO relations (user_id, friend_id, confirmed, restrict) VALUES ($1, $2, false, true)', id, personId);
+      }
+
+      return result.result?.rowCount > 0;
+    })
+
+
+  }
+
+  return {modifySuccess: true, allModified: blocksToRemove.every(value => value)};
+}
+
 async function getBlockedUsers(id) {
   const selectQuery = await query('SELECT * FROM users AS u JOIN relations AS r ON u.id = r.friend_id WHERE r.user_id = $1 AND r.restrict = true', id)
 
@@ -232,4 +305,4 @@ async function getBlockedUsers(id) {
   }
 }
 
-module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser, saveChanges, getBlockedUsers }
+module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser, saveChanges, getBlockedUsers, saveChangesPrivacy }

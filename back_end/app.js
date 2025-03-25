@@ -159,6 +159,14 @@ app.post('/save', requiresAuth, async (req, res) => {
   res.send(result);
 });
 
+app.post('/saveprivacy', requiresAuth, async (req, res) => {
+  const {id, changeStatus, acceptingFriends, acceptingLetters, usersToRemove} = req.body;
+
+  const result = await dbFunctons.saveChangesPrivacy(id, changeStatus, acceptingFriends, acceptingLetters, usersToRemove);
+
+  res.send(result);
+});
+
 app.post('/blockedlist', requiresAuth, async (req, res) => {
   const { id } = req.body;
 
