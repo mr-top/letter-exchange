@@ -159,6 +159,14 @@ app.post('/save', requiresAuth, async (req, res) => {
   res.send(result);
 });
 
+app.post('/blockedlist', requiresAuth, async (req, res) => {
+  const { id } = req.body;
+
+  const result = await dbFunctons.getBlockedUsers(id);
+
+  res.send(result);
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });

@@ -221,4 +221,15 @@ async function saveLocation(id, country, city, lat, lon) {
   return updateQuery.result?.rowCount > 0;
 }
 
-module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser, saveChanges }
+async function getBlockedUsers(id) {
+  const selectQuery = await query('SELECT * FROM users AS u JOIN relations AS r ON u.id = r.friend_id WHERE r.user_id = $1 AND r.restrict = true', id)
+
+  if (selectQuery.success) {
+    const result = selectQuery.result;
+    return { success: true, list: result.rows }
+  } else {
+    return { success: false }
+  }
+}
+
+module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser, saveChanges, getBlockedUsers }
