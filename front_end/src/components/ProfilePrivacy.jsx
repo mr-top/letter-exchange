@@ -44,7 +44,7 @@ function ProfilePrivacy() {
     const somethingChanged = Object.values(changeStatus).some(status => status);
 
     if (somethingChanged) {
-      const result = await axiosFetch(axios.post, '/saveprivacy', {id: loggedDetails.id, changeStatus, acceptingFriends, acceptingLetters, usersToRemove});
+      const result = await axiosFetch(axios.post, '/saveprivacy', { id: loggedDetails.id, changeStatus, acceptingFriends, acceptingLetters, usersToRemove });
       if (result.success) {
         setError({});
 
@@ -60,22 +60,22 @@ function ProfilePrivacy() {
         }
 
         if (result.errorList?.length > 0) {
-          setError(prev => {return {...prev, someChangeError: true}});
-          
+          setError(prev => { return { ...prev, someChangeError: true } });
+
           for (let idx = 0; idx < result.errorList.length; idx++) {
             const currentError = result.errorList[idx];
             switch (currentError[0]) {
               case 'toggleLetters':
-                setChangeStatus(prev => {return {...prev, lettersAcceptChanged: true}});
-                setError(prev => {return {...prev, lettersAcceptError: true}});
+                setChangeStatus(prev => { return { ...prev, lettersAcceptChanged: true } });
+                setError(prev => { return { ...prev, lettersAcceptError: true } });
                 break;
               case 'toggleFriends':
-                setChangeStatus(prev => {return {...prev, friendsAcceptChanged: true}});
-                setError(prev => {return {...prev, friendsAcceptError: true}});
+                setChangeStatus(prev => { return { ...prev, friendsAcceptChanged: true } });
+                setError(prev => { return { ...prev, friendsAcceptError: true } });
                 break;
               case 'blockList':
-                setChangeStatus(prev => {return {...prev, blockedListChanged: true}});
-                setError(prev => {return {...prev, blockListError: true}});
+                setChangeStatus(prev => { return { ...prev, blockedListChanged: true } });
+                setError(prev => { return { ...prev, blockListError: true } });
                 break;
             }
           }
@@ -84,7 +84,7 @@ function ProfilePrivacy() {
 
     } else {
       // no changes were made
-      setError(prev => { return { ...prev, noChangeError: true }});
+      setError(prev => { return { ...prev, noChangeError: true } });
     }
   }
 
@@ -124,7 +124,20 @@ function ProfilePrivacy() {
 
       <input onClick={save} type="button" value={'Save Changes'} className="btn btn-accent" />
 
-      <input type="button" value={'Delete Account'} className="btn btn-error" />
+      <button className="btn btn-error" onClick={() => document.getElementById('delete_modal').showModal()}>Delete account</button>
+      <dialog id="delete_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Warning</h3>
+          <p className="py-4">This is to confirm that you would like to delete your account</p>
+          <p className='py-4'>Sorry. This feature is not available yet. Please email us to delete your account</p>
+          <div className="modal-action">
+            <button className="btn btn-warning" disabled={true}>Confirm</button>
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </>
   )
 }
