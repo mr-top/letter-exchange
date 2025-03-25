@@ -15,7 +15,7 @@ function ProfileWeb() {
 
   return (
     <>
-      <div className="flex-initial flex flex-col items-center w-full border-b-1 border-base-content py-2">
+      <div className="flex-initial flex flex-col items-center w-full py-2">
         <p className="text-sm opacity-70">Theme</p>
         <select onChange={changeTheme} value={theme} className="flex-initial select text-sm">
           <option value='light'>Light</option>

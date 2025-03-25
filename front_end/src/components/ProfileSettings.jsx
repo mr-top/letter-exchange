@@ -15,7 +15,7 @@ function ProfileSettings() {
           <a role="tab" className={`flex-1 tab ${currentTab === 'g' && 'tab-active'}`} onClick={() => setCurrentTab('g')}>General</a>
           <a role="tab" className={`flex-1 tab ${currentTab === 'w' && 'tab-active'}`} onClick={() => setCurrentTab('w')}>Web</a>
         </div>
-        <div className="flex-1 flex flex-col justify-center items-center space-y-3 w-full">
+        <div className="flex-1 flex flex-col justify-start items-center space-y-3 py-2 w-full">
           {currentTab === 'p' && <ProfilePrivacy/>}
           {currentTab === 'g' && <ProfileGeneral/>}
           {currentTab === 'w' && <ProfileWeb/>}
