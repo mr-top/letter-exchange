@@ -8,7 +8,7 @@ function ProfileSettings() {
   const [currentTab, setCurrentTab] = useState('g');
 
   return (
-    <div className="flex justify-center min-h-120 w-full p-4">
+    <div className="flex justify-center min-h-140 w-full p-4">
       <div className="flex-initial flex flex-col h-full min-w-100 w-120 border-1 border-base-content">
         <div role="tablist" className="flex-initial flex w-full tabs tabs-lift">
           <a role="tab" className={`flex-1 tab ${currentTab === 'p' && 'tab-active'}`} onClick={() => setCurrentTab('p')}>Privacy</a>
