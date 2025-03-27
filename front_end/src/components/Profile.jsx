@@ -2,6 +2,8 @@ import { useContext, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import Compose from "./Compose";
+import Report from "./Report";
+import Block from "./Block";
 
 import { LetterHistoryContext } from "./utils/LetterHistoryContext";
 
@@ -53,14 +55,18 @@ function Profile({ id, ownProfile }) {
         <div className="flex-3/6 flex justify-center items-center">
           <ProfileStat profile={profile} />
         </div>
-        <div className="flex-1/6 flex justify-center items-center">
+        <div className="flex-1/6 flex justify-center items-center px-4 space-x-2">
           {ownProfile ?
             <>
               <Link to='/profile/settings'><button className="btn btn-accent">Settings</button></Link>
             </> :
             <>
-              <button className="btn btn-accent" onClick={() => document.getElementById('compose_modal').showModal()}>Compose a letter</button>
+              <button className="flex-4/6 btn btn-accent" onClick={() => document.getElementById('compose_modal').showModal()}>Compose a letter</button>
               <Compose lookup={lookup} setLookup={setLookup} />
+              <button className="flex-1/6 btn btn-warning text-xs" onClick={() => document.getElementById('report_modal').showModal()}>Report</button>
+              <Report profile={profile}/>
+              <button className="flex-1/6 btn btn-error text-xs" onClick={() => document.getElementById('block_modal').showModal()}>Block</button>
+              <Block profile={profile}/>
             </>
           }
         </div>
