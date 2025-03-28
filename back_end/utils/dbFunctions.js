@@ -140,18 +140,35 @@ async function createLetter(sourceId, targetId, letterContent, letterLength, dis
   const estimateMseconds = distanceKm * 60 * 1000;
   const estimateTimestamp = new Date(Date.now() + estimateMseconds).toJSON();
 
-  const insertQuery = await query('INSERT INTO letters (sender_id, recipient_id, content, length, arrival_date) VALUES ($1, $2, $3, $4, $5)', sourceId, targetId, letterContent, letterLength, estimateTimestamp);
+  const selectQuery = await query('SELECT u.*, r.*, r2.restrict AS blocked FROM users AS u JOIN relations AS r ON r.friend_id = u.id LEFT JOIN relations AS r2 ON r.friend_id = r2.user_id AND r.user_id = r2.friend_id WHERE r.user_id = $1 AND r.friend_id = $2', sourceId, targetId);
 
-  if (insertQuery.success) {
-    const result = insertQuery.result;
-    if (result.rowCount > 0) {
-      return { success: true }
+  if (selectQuery.success) {
+    const selectResult = selectQuery.result;
+    let allowedToSend = true;
+
+    if (selectResult.rowCount > 0) {
+      const selectedUser = selectResult.rows[0];
+      allowedToSend = !selectedUser.blocked; 
     } else {
-      return { success: false }
+      const relationInsert = await query('INSERT INTO relations (user_id, friend_id, confirmed) VALUES ($1, $2, true)', sourceId, targetId);
+      if (!relationInsert.success) allowedToSend = false;
+    }
+
+    if (allowedToSend) {
+      const insertQuery = await query('INSERT INTO letters (sender_id, recipient_id, content, length, arrival_date) VALUES ($1, $2, $3, $4, $5)', sourceId, targetId, letterContent, letterLength, estimateTimestamp);
+      
+      if (insertQuery.success) {
+        return {success: true, msg: 'Letter sent'}
+      } else {
+        return {success: false, msg: 'Letter could not be sent'}
+      }
+    } else {
+      return {success: false, msg: 'Sorry. You are now allowed to send letter to this person'}
     }
   } else {
-    return insertQuery;
+    return selectQuery;
   }
+
 }
 
 async function rejectUser(sourceId, targetId) {
