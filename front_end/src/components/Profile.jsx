@@ -66,7 +66,7 @@ function Profile({ id, ownProfile }) {
               <button className="flex-1/6 btn btn-warning text-xs" onClick={() => document.getElementById('report_modal').showModal()}>Report</button>
               <Report profile={profile}/>
               <button className="flex-1/6 btn btn-error text-xs" onClick={() => document.getElementById('block_modal').showModal()}>Block</button>
-              <Block profile={profile}/>
+              <Block profile={profile} setLookup={setLookup}/>
             </>
           }
         </div>

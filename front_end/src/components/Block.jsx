@@ -6,7 +6,7 @@ import { UserContext } from "./utils/UserContext";
 import axios from "axios";
 import axiosFetch from "../utils/axiosFetch";
 
-function Block({profile}) {
+function Block({profile, setLookup}) {
   const navigate = useNavigate();
   const { loggedDetails } = useContext(UserContext);
   const [display, setDisplay] = useState({}); 
@@ -18,6 +18,7 @@ function Block({profile}) {
     const result = await axiosFetch(axios.post, '/block', {sourceId: loggedDetails.id, targetId: profile.id});
     if (result.success) {
       setDisplay({success: true, msg: 'Blocked successfully'});
+      setLookup({method: 'open', id: loggedDetails.id});
       navigate('/home');
     } else {
       setDisplay({success: false, msg: 'Blocking failed'});
