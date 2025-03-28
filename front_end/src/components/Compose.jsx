@@ -45,8 +45,9 @@ function Compose({setLookup, lookup}) {
           </select>
         </fieldset>
         <p>This letter will be delivered in {estimate} hours</p>
+        <p>{lookup.blocked && 'You are blocked by this person'}</p>
         <div className="modal-action">
-          <button className="btn btn-primary" onClick={() => document.getElementById('send_modal').showModal()}>Send letter</button>
+          <button disabled={lookup.blocked} className="btn btn-primary" onClick={() => document.getElementById('send_modal').showModal()}>Send letter</button>
           <form method="dialog">
             <button className="btn">Close</button>
           </form>
