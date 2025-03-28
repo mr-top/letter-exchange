@@ -150,7 +150,7 @@ async function createLetter(sourceId, targetId, letterContent, letterLength, dis
       const selectedUser = selectResult.rows[0];
       allowedToSend = !selectedUser.blocked; 
     } else {
-      const relationInsert = await query('INSERT INTO relations (user_id, friend_id, confirmed) VALUES ($1, $2, true)', sourceId, targetId);
+      const relationInsert = await query('INSERT INTO relations (user_id, friend_id, confirmed) VALUES ($1, $2, true), ($2, $1, false)', sourceId, targetId);
       if (!relationInsert.success) allowedToSend = false;
     }
 
@@ -180,7 +180,7 @@ async function rejectUser(sourceId, targetId) {
       const deleteQuery = await query('DELETE FROM relations WHERE user_id = $1 AND friend_id = $2 AND confirmed = false', sourceId, targetId);
 
       if (deleteQuery.success) {
-        const updateQuery = await query('UPDATE relations SET confirmed = false, restrict = true WHERE user_id = $2 AND friend_id = $1 AND confirmed = true', sourceId, targetId);
+        const updateQuery = await query('UPDATE relations SET confirmed = false WHERE user_id = $2 AND friend_id = $1 AND confirmed = true', sourceId, targetId);
 
         if (updateQuery.success && updateQuery.result.rowCount > 0) {
           return { success: true, msg: 'Relation deleted and target user restricted' }
