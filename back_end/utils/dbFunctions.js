@@ -305,4 +305,41 @@ async function getBlockedUsers(id) {
   }
 }
 
-module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser, saveChanges, getBlockedUsers, saveChangesPrivacy }
+async function block(sourceId, targetId) {
+  const selectQuery = await query('SELECT * FROM relations WHERE user_id = $1 AND friend_id = $2', sourceId, targetId);
+  
+  let result;
+  if (selectQuery.success) {
+    if (selectQuery.result.rowCount > 0) {
+      const updateQuery = await query('UPDATE relations SET confirmed = false, restrict = true WHERE user_id = $1 AND friend_id = $2', sourceId, targetId);
+      result = updateQuery;
+    } else {
+      const insertQuery = await query('INSERT INTO relations (user_id, friend_id, confirmed, restrict) VALUES ($1, $2, false, true)', sourceId, targetId);
+      result = insertQuery;
+    }
+  }
+
+  if (result.success) {
+    if (result.result.rowCount > 0) {
+      return {success: true, msg: 'Blocked'}
+    } else {
+      return {success: false, msg: 'Failed'}
+    }
+  }
+}
+
+async function report(sourceId, targetId, reportDetails) {
+  const insertQuery = await query ('INSERT INTO reports (source_id, target_id, report) VALUES ($1, $2, $3)', sourceId, targetId, reportDetails);
+
+  if (insertQuery.success) {
+    const result = insertQuery.result;
+
+    if (result.rowCount > 0) return {success: true, msg: 'Report filed'};
+  }
+
+  return {success: false, msg: 'Report could not be filed'}
+}
+
+
+
+module.exports = { ping, login, register, getOpenletters, getLetters, getFriends, getProfile, getDistance, createLetter, rejectUser, saveChanges, getBlockedUsers, saveChangesPrivacy, block, report }

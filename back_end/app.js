@@ -175,6 +175,22 @@ app.post('/blockedlist', requiresAuth, async (req, res) => {
   res.send(result);
 });
 
+app.post('/block', requiresAuth, async (req, res) => {
+  const { sourceId, targetId } = req.body;
+
+  const result = await dbFunctons.block(sourceId, targetId);
+
+  res.send(result);
+});
+
+app.post('/report', requiresAuth, async (req, res) => {
+  const { sourceId, targetId, reportDetails } = req.body;
+
+  const result = await dbFunctons.report(sourceId, targetId, reportDetails);
+
+  res.send(result);
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });
