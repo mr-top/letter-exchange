@@ -17,7 +17,7 @@ CREATE TABLE users (
 CREATE TABLE letters (
   id SERIAL NOT NULL UNIQUE,
   sender_id INTEGER NOT NULL REFERENCES users(id),
-  recipient_id INTEGER NOT NULL REFERENCES users(id),
+  recipient_id INTEGER REFERENCES users(id),
   content TEXT NOT NULL,
   posted_date TIMESTAMP NOT NULL DEFAULT NOW(),
   arrival_date TIMESTAMP NOT NULL DEFAULT NOW(),

@@ -50,7 +50,7 @@ function Profile({ id, ownProfile }) {
           </div>
         </div>
         <div className="flex-1/6 flex justify-center items-center">
-          <p className="text-lg">"{profile.quote || 'No quote provided'}"</p>
+          <p className="text-lg">"{profile.description || 'No quote provided'}"</p>
         </div>
         <div className="flex-3/6 flex justify-center items-center">
           <ProfileStat profile={profile} />

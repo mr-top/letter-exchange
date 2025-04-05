@@ -35,7 +35,7 @@ function Login() {
           <Link to='/register'><p className="text-sm font-medium">Create one</p></Link>
         </div>
       </div>
-      {status && (status.success ? 'It worked' : 'It did not work')}
+      {status && status.msg}
     </form>
   )
 }

@@ -11,14 +11,11 @@ function UserProvider (props) {
   async function attemptLogin (username, password) {
     const result = await axiosFetch(axios.post, '/login', {username, password});
 
-    console.log(result);
     if (result.success) {
-      const {username, id, avatar} = result;
-      setLoggedDetails({logged: true, username, id, avatar});
-      return {success: true, msg: 'Logged in successfully'}
-    } else {
-      return {success: false, msg: 'Not logged in'}
-    }
+      setLoggedDetails({logged: true, ...result.details});
+    } 
+
+    return result;
   }
 
   async function attemptLogout () {

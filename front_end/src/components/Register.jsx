@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import getGeo from "../utils/getGeo";
@@ -7,12 +7,14 @@ import axiosFetch from "../utils/axiosFetch";
 import inputVerify from "../utils/inputVerify";
 
 function Register() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState('');
   const [tried, setTried] = useState(false);
+  const [status, setStatus] = useState({});
 
   async function register (e) {
     e.preventDefault();
@@ -20,6 +22,12 @@ function Register() {
     if (inputVerify.signup(username, email, password, confirmPassword)) {
       const geo = await getGeo();
       const result = await axiosFetch(axios.post, '/register', {username, email, password, geo});
+
+      setStatus(result);
+
+      if (result.success) {
+        navigate('/login');
+      }
     } else {
       
     }
@@ -30,12 +38,12 @@ function Register() {
   return (
     <form className="flex flex-col justify-center py-2 px-10 w-70 min-h-100 max-h-120 border-1 border-base-content" onSubmit={register}>
       <div className="flex-initial">
-        <label className="opacity-75 text-sm">Username:</label>
+        <label className="opacity-75 text-sm">Username: {status.usernameExists && 'Field already exists'}</label>
         <input type="text" value={username} onChange={e => setUsername(e.currentTarget.value)} className={`w-full h-8 px-2 ${tried && username && !inputVerify.checkUsername(username) && 'border-red-400'}`} />
         <p className="text-xs">{tried && username && !inputVerify.checkUsername(username) && 'Username must be made of 6-16 letters'}</p>
       </div>
       <div className="flex-initial">
-        <label className="opacity-75 text-sm">Email:</label>
+        <label className="opacity-75 text-sm">Email: {status.emailExists && 'Field already exists'}</label>
         <input type="text" value={email} onChange={e => setEmail(e.currentTarget.value)} className={`w-full h-8 px-2 ${tried && email && !inputVerify.checkEmail(email) && 'border-red-400'}`} />
         <p className="text-xs">{tried && email && !inputVerify.checkEmail(email) && 'Must be valid email'}</p>
       </div>
@@ -56,6 +64,7 @@ function Register() {
           <Link to='/login'><p className="text-xs font-medium">Log in instead</p></Link>
         </div>
       </div>
+      {status && status.msg}
     </form>
   )
 }

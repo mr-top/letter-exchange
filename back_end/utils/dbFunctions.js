@@ -92,6 +92,9 @@ async function getLetters(sourceId, targetId) {
 }
 
 async function getFriends(id) {
+  // SELECT u.*, r2.* FROM users AS u JOIN relations AS r ON u.id = r.user_id LEFT JOIN relations AS r2 ON r2.user_id = r.friend_id AND r2.friend_id = r.user_id WHERE r.friend_id = $1;
+  // SELECT u.*, r.*, r2.restrict AS blocked FROM users AS u JOIN relations AS r ON u.id = r.friend_id LEFT JOIN relations AS r2 ON r.user_id = r2.friend_id AND r.friend_id = r2.user_id WHERE r.user_id = $1 AND r.restrict = false
+
   const selectQuery = await query('SELECT u.*, r.*, r2.restrict AS blocked FROM users AS u JOIN relations AS r ON u.id = r.friend_id LEFT JOIN relations AS r2 ON r.user_id = r2.friend_id AND r.friend_id = r2.user_id WHERE r.user_id = $1 AND r.restrict = false', id);
 
   if (selectQuery.success) {
@@ -242,6 +245,8 @@ async function saveChangesPrivacy(id, statusChanges, acceptingFriends, accepting
   const statusArray = Object.entries(statusChanges).filter(status => status[1]);
   const somethingChanged = statusArray;
   const errorList = [];
+
+  console.log(statusArray);
 
   let modifySuccess;
   let allModified;

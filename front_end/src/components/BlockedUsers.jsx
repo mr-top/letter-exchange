@@ -33,7 +33,7 @@ function BlockedUsers({ id, setChangeStatus, usersToRemove, setUsersToRemove}) {
   return (
     users.map(user => <div className='w-full flex p-2' key={user.id}>
       <button className="btn basis-3/4">{user.username}</button>
-      <button className={`btn basis-1/4 ${usersToRemove.includes(user.friend_id) ? 'btn-success' : 'btn-warning'}`} onClick={() => removeUser(user.friend_id)}>X</button>
+      <button className={`btn basis-1/4 ${usersToRemove.includes(user.id) ? 'btn-success' : 'btn-warning'}`} onClick={() => removeUser(user.id)}>X</button>
     </div>)
   )
 }

@@ -3,7 +3,9 @@ const Client = require('pg').Client;
 async function query (statement, ...params) {
   try {
     const dbConnection = new Client({
-      database: 'test1'
+      database: 'test1',
+      user: 'express',
+      password: '5559'
     });
 
     await dbConnection.connect()
