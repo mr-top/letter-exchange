@@ -395,6 +395,31 @@ class DbFunctions {
 
   return { msg: 'Database error' }
   }
+
+  async deleteLetter(letterId) {
+    const selectQuery = await query('SELECT * FROM letters WHERE sender_id = $1 AND id = $2', this.id, letterId);
+
+    if (selectQuery.success) {
+
+      if (selectQuery.result.rowCount > 0) {
+        const deleteQuery = await query('DELETE FROM letters WHERE sender_id = $1 AND id = $2', this.id, letterId);
+
+        if (deleteQuery.success) {
+          if (selectQuery.result.rowCount > 0) {
+            return {success: true, msg: 'Letted deleted'}
+          } else {
+            return { msg: 'Letter could not be deleted'}
+          }
+        } else {
+          return { msg: 'Database error' }
+        }
+      } else {
+        return { msg: 'Letter not found' }
+      }
+    } else {
+      return { msg: 'Database error' }
+    }
+  }
 }
 
 module.exports = DbFunctions;

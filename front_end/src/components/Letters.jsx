@@ -2,8 +2,12 @@ import { useState } from "react";
 
 import checkTime from "../utils/checkTime";
 
+import axios from "axios";
+import axiosFetch from "../utils/axiosFetch";
+
 function Letters({ setLookup, lookup, letters, loggedDetails }) {
   const [currentLetter, setCurrentLetter] = useState({});
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   function openLetter(letter) {
     setCurrentLetter(letter);
@@ -21,6 +25,21 @@ function Letters({ setLookup, lookup, letters, loggedDetails }) {
     }
 
     document.getElementById('compose_modal').addEventListener('close', closeEvent)
+  }
+
+  async function deleteLetter(letterId) {
+    setDeleteLoading(true);
+
+    const result = await axiosFetch(axios.post, '/deleteletter', {letterId});
+
+    if (result.success) {
+      document.getElementById('delete_modal').close()
+      document.getElementById('letter-modal').close()
+
+      setLookup(prev => {return {...prev}})
+    }
+
+    setDeleteLoading(false);
   }
 
   return (
@@ -54,12 +73,22 @@ function Letters({ setLookup, lookup, letters, loggedDetails }) {
           <h2 className="text-md">Posted date: {currentLetter.posted_date}</h2>
           <p>{currentLetter.content}</p>
           <div className="modal-action">
-            {currentLetter.sender_id === loggedDetails.id || <button className="btn btn-accent" onClick={() => replyLetter(currentLetter.sender_id)}>Reply</button>}
+            {currentLetter.sender_id === loggedDetails.id ? <button className="btn btn-error" onClick={() => document.getElementById('delete_modal').showModal()}>Delete letter</button> : <button className="btn btn-accent" onClick={() => replyLetter(currentLetter.sender_id)}>Reply</button>}
             <form method="dialog">
               <button className="btn">Close</button>
             </form>
           </div>
         </div>
+        <dialog id="delete_modal" className='modal'>
+          <div className="modal-box">
+            <h2 className="text-md">Deleting a letter</h2>
+            <p className="text-sm">Are you sure you want to delete this letter?</p>
+            <div className="modal-action">
+              <button onClick={() => deleteLetter(currentLetter.id)} className="btn btn-error" disabled={deleteLoading}>Confirm</button>
+              <button onClick={() => document.getElementById('delete_modal').close()} className="btn">Close</button>
+            </div>
+          </div>
+        </dialog>
       </dialog>
     </>
   )

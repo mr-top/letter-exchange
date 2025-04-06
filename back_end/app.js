@@ -193,6 +193,14 @@ app.post('/report', requiresAuth, async (req, res) => {
   res.send(result);
 });
 
+app.post('/deleteletter', requiresAuth, async (req, res) => {
+  const { letterId } = req.body;
+
+  const result = await res.locals.manage.deleteLetter(letterId);
+
+  res.send(result);
+});
+
 app.listen(5555, () => {
   console.log('started listening');
 });
