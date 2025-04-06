@@ -3,6 +3,9 @@ const session = require('express-session');
 const LokiStore = require('connect-loki')(session);
 const morgan = require('morgan');
 const cors = require('cors');
+require('dotenv').config();
+
+const nodemailer = require('nodemailer');
 
 const DbFunctons = require('./utils/dbFunctionsNew');
 
@@ -87,9 +90,9 @@ app.post('/signout', requiresAuth, async (req, res) => {
 });
 
 app.post('/register', requiresAuth, async (req, res) => {
-  const {username, email, password, geo} = req.body;
+  const {username, email, password, geo, otp } = req.body;
 
-  const result = await res.locals.manage.signup(username, email, password, geo);
+  const result = await res.locals.manage.signup(username, email, password, geo, otp);
 
   res.send(result);
 });
@@ -200,6 +203,34 @@ app.post('/deleteletter', requiresAuth, async (req, res) => {
 
   res.send(result);
 });
+
+app.post('/otp', async (req, res) => {
+  const {email} = req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.emailUser,
+      pass: process.env.emailPassword
+    }
+  });
+
+  const result = await res.locals.manage.generateOtp(email);
+
+  if (result.success) {
+    transporter.sendMail({
+      from: 'Shuka',
+      to: result.email,
+      subject: 'Your email verify code',
+      text: `Use code ${result.otpRaw} to complete your register for letter exchange. It's active for 5 minutes from now`
+    });
+
+    delete result.email;
+    delete result.optRaw;
+  } 
+
+  res.send(result);
+})
 
 app.listen(5555, () => {
   console.log('started listening');

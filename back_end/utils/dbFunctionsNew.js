@@ -1,6 +1,7 @@
 const query = require('./query');
 const haversine = require('./haversine');
 const bcrypt = require('bcrypt');
+const checkTime = require('./checkTime');
 
 class DbFunctions {
   constructor(logged, userId) {
@@ -26,9 +27,10 @@ class DbFunctions {
 
       if (userFound) {
         const foundUser = selectQuery.result.rows[0];
+        console.log(foundUser.password);
+        console.log(inputPassword)
 
-        // bcrypt not turned on!!
-        if (foundUser.password === inputPassword) {
+        if (await bcrypt.compare(inputPassword, foundUser.password)) {
           return { success: true, msg: 'Signed in successfully', details: { username: foundUser.username, id: foundUser.id, avatar: foundUser.avatar } }
         } else {
           return { msg: 'Username found but password not correct' }
@@ -41,24 +43,34 @@ class DbFunctions {
     }
   }
 
-  async signup(inputUsername, inputEmail, inputPassword, geo) {
+  async signup(inputUsername, inputEmail, inputPassword, geo, otp) {
     const usernameSelectQuery = await query('SELECT * FROM users WHERE username = $1', inputUsername);
     let usernameExists = false;
     const emailSelectQuery = await query('SELECT * FROM users WHERE email = $1', inputEmail);
     let emailExists = false;
+    const optQuery = await query('SELECT * FROM otp WHERE email = $1', inputEmail.toLowerCase());
+    let otpWrong = true;
 
-    if (usernameSelectQuery.success && emailSelectQuery.success) {
+    if (usernameSelectQuery.success && emailSelectQuery.success && optQuery.success) {
       usernameExists = usernameSelectQuery.result.rowCount > 0;
       emailExists = emailSelectQuery.result.rowCount > 0;
+      if (optQuery.result.rowCount > 0) {
+        const otpSelect = optQuery.result.rows[0];
+        if (checkTime(otpSelect.expiry_date)) {
+          otpWrong = !await bcrypt.compare(otp, otpSelect.value);
+        } 
+      }
     } else {
       return { msg: 'Database error' }
     }
 
-    if (usernameExists || emailExists) {
-      return { msg: 'Field already exists', usernameExists, emailExists }
+    if (usernameExists || emailExists || otpWrong) {
+      return { msg: 'Errors exist', usernameExists, emailExists, otpWrong }
     }
 
-    const insertQuery = await query('INSERT INTO users (username, email, password, country, city, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7)', inputUsername, inputEmail, inputPassword, geo.countryCode, geo.city, geo.lat, geo.lon);
+    const hashedPassword = await bcrypt.hash(inputPassword, 5);
+
+    const insertQuery = await query('INSERT INTO users (username, email, password, country, city, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7)', inputUsername, inputEmail, hashedPassword, geo.countryCode, geo.city, geo.lat, geo.lon);
 
     if (insertQuery.success) {
       const result = insertQuery.result;
@@ -372,12 +384,12 @@ class DbFunctions {
 
       if (result.success) {
         if (result.result.rowCount > 0) {
-          return {success: true, msg: 'Blocked'}
+          return { success: true, msg: 'Blocked' }
         } else {
-          return {msg: 'Failed'}
+          return { msg: 'Failed' }
         }
       } else {
-        return { msg: 'Database error'}
+        return { msg: 'Database error' }
       }
     } else {
       return { msg: 'Database error' }
@@ -385,15 +397,15 @@ class DbFunctions {
   }
 
   async report(targetId, reportDetails) {
-    const insertQuery = await query ('INSERT INTO reports (source_id, target_id, report) VALUES ($1, $2, $3)', this.id, targetId, reportDetails);
+    const insertQuery = await query('INSERT INTO reports (source_id, target_id, report) VALUES ($1, $2, $3)', this.id, targetId, reportDetails);
 
-  if (insertQuery.success) {
-    const result = insertQuery.result;
+    if (insertQuery.success) {
+      const result = insertQuery.result;
 
-    if (result.rowCount > 0) return {success: true, msg: 'Report filed'};
-  }
+      if (result.rowCount > 0) return { success: true, msg: 'Report filed' };
+    }
 
-  return { msg: 'Database error' }
+    return { msg: 'Database error' }
   }
 
   async deleteLetter(letterId) {
@@ -406,15 +418,55 @@ class DbFunctions {
 
         if (deleteQuery.success) {
           if (selectQuery.result.rowCount > 0) {
-            return {success: true, msg: 'Letted deleted'}
+            return { success: true, msg: 'Letted deleted' }
           } else {
-            return { msg: 'Letter could not be deleted'}
+            return { msg: 'Letter could not be deleted' }
           }
         } else {
           return { msg: 'Database error' }
         }
       } else {
         return { msg: 'Letter not found' }
+      }
+    } else {
+      return { msg: 'Database error' }
+    }
+  }
+
+  async generateOtp(email) {
+    const emailLower = email.toLowerCase();
+
+    const selectQuery = await query('SELECT * FROM users WHERE email = $1', emailLower);
+
+    if (selectQuery.success) {
+      if (selectQuery.result.rowCount <= 0) {
+
+        const selectQuery = await query('SELECT * FROM otp WHERE email = $1', emailLower);
+
+        if (selectQuery.success) {
+          if (selectQuery.result.rowCount > 0) {
+            const deleteQuery = await query('DELETE FROM otp WHERE email = $1', emailLower);
+            if (!deleteQuery.success) return { msg: 'Database error' };
+          }
+
+          const sixDigits = Math.random().toString().substr(2, 6);
+          const hashedSixDigits = await bcrypt.hash(sixDigits, 5);
+
+          const currentTime = new Date().getTime();
+          const expiryTime = currentTime + 300000;
+
+          const insertQuery = await query('INSERT INTO otp (email, value, create_date, expiry_date) VALUES ($1, $2, $3, $4)', email, hashedSixDigits, new Date(currentTime), new Date(expiryTime));
+
+          if (insertQuery.success) {
+            return { success: true, msg: 'OTP Logged', otpRaw: sixDigits, email: emailLower }
+          } else {
+            return { msg: 'Database error' }
+          }
+        } else {
+          return { msg: 'Database error' }
+        }
+      } else {
+        return { msg: 'Email already in use' }
       }
     } else {
       return { msg: 'Database error' }
