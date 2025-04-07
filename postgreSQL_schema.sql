@@ -40,3 +40,11 @@ CREATE TABLE reports (
   target_id INTEGER NOT NULL REFERENCES users (id),
   created_date TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE otp (
+  id SERIAL NOT NULL UNIQUE PRIMARY KEY,
+  email TEXT NOT NULL,
+  value TEXT NOT NULL,
+  create_date TIMESTAMP NOT NULL,
+  expiry_date TIMESTAMP NOT NULL
+);
