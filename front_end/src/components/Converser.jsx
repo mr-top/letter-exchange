@@ -26,7 +26,7 @@ function Converser ({lookup}) {
         <img src={anonymous} alt="profile picture" />
       </div>
       <div className="flex-initial">
-        <h2 className="text-lg link" onClick={() => navigate(`/profile/${lookup.id}`)}>{profile.username}</h2>
+        <h2 className="text-lg link" onClick={() => navigate(`/profile/${profile.id}`)}>{profile.username}</h2>
       </div>
     </div>
   )
