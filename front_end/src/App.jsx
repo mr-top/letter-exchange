@@ -21,7 +21,7 @@ function App() {
       <div className="flex flex-col min-h-screen">
         {connected || 
         <div>
-          <p>Connection not established! Refreshing page in {countdown} <button className='btn' onClick={forceRefresh}>Refresh now</button> {import.meta.env.REACT_APP_BACKEND_IP}</p>
+          <p>Connection not established! Refreshing page in {countdown} <button className='btn' onClick={forceRefresh}>Refresh now</button> {import.meta.env.VITE_BACKEND_IP}</p>
         </div>}
         <div className="flex-initial">
           <Navbar />
