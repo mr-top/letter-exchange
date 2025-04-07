@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { UserContext } from "./utils/UserContext";
 
 function Login() {
+  const navigate = useNavigate();
   const { attemptLogin } = useContext(UserContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,6 +15,9 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     const result = await attemptLogin(username, password);
+    
+    if (result.success) navigate('/home');
+
     setStatus(result);
     setLoading(false);
   }

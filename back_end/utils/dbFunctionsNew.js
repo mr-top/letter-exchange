@@ -136,7 +136,7 @@ class DbFunctions {
   }
 
   async getProfile(targetId) {
-    const selectQuery = await query('SELECT users.id, users.username, users.country, users.city, users.description, users.joined_date, users.dob, users.accepting_letters, users.accepting_friends FROM users WHERE id = $1', targetId);
+    const selectQuery = await query('SELECT users.id, users.username, users.email, users.country, users.city, users.description, users.joined_date, users.dob, users.accepting_letters, users.accepting_friends FROM users WHERE id = $1', targetId);
 
     if (selectQuery.success) {
       const result = selectQuery.result;
@@ -274,6 +274,7 @@ class DbFunctions {
   }
 
   async saveQuote(id, quote) {
+    if (quote.length > 30) return false;
     const updateQuery = await query('UPDATE users SET description = $2 WHERE id = $1', id, quote);
 
     return updateQuery.result?.rowCount > 0;

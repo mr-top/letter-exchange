@@ -109,7 +109,12 @@ function ProfileGeneral() {
       </div>
 
       <div>
-        <label className="text-sm opacity-70">Quote {error.quoteError && '(Error occured)'}</label>
+        <label className="text-sm opacity-70">Email</label>
+        <input type="text" value={profile.email || ''} className="input" disabled={true} />
+      </div>
+
+      <div>
+        <label className="text-sm opacity-70">Quote {quote && `${quote.length} / 30`}{error.quoteError && '(Error occured)'}</label>
         <textarea id='quote_id' type="text" value={quote || ''} onChange={e => setQuote(e.currentTarget.value)} className="textarea h-20" />
       </div>
 
