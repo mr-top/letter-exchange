@@ -3,7 +3,8 @@ const Client = require('pg').Client;
 async function query (statement, ...params) {
   try {
     const dbConnection = new Client({
-      database: process.env.DATABASE_URL
+      database: 'railway',
+      connectionString: process.env.DATABASE_URL
     });
 
     await dbConnection.connect()
