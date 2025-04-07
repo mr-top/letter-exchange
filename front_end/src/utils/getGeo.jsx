@@ -3,8 +3,6 @@ import axios from "axios";
 async function getGeo() {
   try {
     const geoResult = await axios.get(`https://api.ipstack.com/check?access_key=${import.meta.env.VITE_IPSTACK_API_KEY}`, { withCredentials: false });
-
-    console.log(geo);
     let geo = { country_code: 'XX' };
     if (geoResult.status !== 200) throw Error;
     geo = geoResult.data;
