@@ -20,7 +20,7 @@ function requiresAuth(req, res, next) {
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_IP,
   methods: ['GET', 'POST'],
   credentials: true
 }));
