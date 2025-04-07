@@ -85,7 +85,7 @@ app.post('/api/signout', requiresAuth, async (req, res) => {
   
 });
 
-app.post('/api/register', requiresAuth, async (req, res) => {
+app.post('/api/register', async (req, res) => {
   const {username, email, password, geo, otp } = req.body;
 
   const result = await res.locals.manage.signup(username, email, password, geo, otp);
