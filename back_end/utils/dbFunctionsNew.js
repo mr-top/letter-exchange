@@ -27,8 +27,6 @@ class DbFunctions {
 
       if (userFound) {
         const foundUser = selectQuery.result.rows[0];
-        console.log(foundUser.password);
-        console.log(inputPassword)
 
         if (await bcrypt.compare(inputPassword, foundUser.password)) {
           return { success: true, msg: 'Signed in successfully', details: { username: foundUser.username, id: foundUser.id, avatar: foundUser.avatar } }
@@ -171,6 +169,8 @@ class DbFunctions {
   }
 
   async createLetter(targetId, letterContent, letterLength, distanceKm) {
+    if (letterContent.length > 3000) return { msg: 'Length too long' };
+
     const estimateMseconds = distanceKm * 60 * 1000;
     const estimateTimestamp = new Date(Date.now() + estimateMseconds).toJSON();
 
@@ -185,14 +185,16 @@ class DbFunctions {
         if (relationQuery.success) {
           const relationResult = relationQuery.result;
 
-          if (!(relationResult.rowCount > 0)) {
-            // create relationship
-            const insertQuery = await query('INSERT INTO relations (user_id, friend_id, confirmed) VALUES ($1, $2, true)', this.id, targetId);
-
-            if (!insertQuery.success) return { msg: 'Database error' }
+          if (this.id !== Number(targetId)) {
+            if (!(relationResult.rowCount > 0)) {
+              // create relationship
+              const insertQuery = await query('INSERT INTO relations (user_id, friend_id, confirmed) VALUES ($1, $2, true)', this.id, targetId);
+  
+              if (!insertQuery.success) return { msg: 'Database error' }
+            }
           }
 
-          const insertQuery = await query('INSERT INTO letters (sender_id, recipient_id, content, arrival_date, length) VALUES ($1, $2, $3, $4, $5)', this.id, targetId, letterContent, estimateTimestamp, letterLength);
+          const insertQuery = await query('INSERT INTO letters (sender_id, recipient_id, content, arrival_date, length) VALUES ($1, $2, $3, $4, $5)', this.id, this.id === Number(targetId) ? undefined : targetId, letterContent, estimateTimestamp, letterLength);
 
           if (insertQuery.success) {
             return { success: true, msg: 'Letter inserted' }

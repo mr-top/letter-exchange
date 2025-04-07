@@ -25,6 +25,7 @@ function Home() {
             <LetterFilter />
           </div>
           {lookup.method ==='friend' && <button className="btn flex-initial w-35 btn-secondary" onClick={()=>document.getElementById('compose_modal').showModal()}>Send a letter</button>}
+          {lookup.method ==='open' && <button className="btn flex-initial w-35 btn-secondary" onClick={()=>document.getElementById('compose_modal').showModal()}>Send a letter</button>}
           {lookup.newFriend && <DeleteButton setFriendsRefresh={setFriendsRefresh} setLookup={setLookup} lookup={lookup} loggedDetails={loggedDetails}/>}
         </div>
         <div className="flex-1 place-items-center overflow-y-auto grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 p-2">

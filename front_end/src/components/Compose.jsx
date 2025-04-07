@@ -32,7 +32,7 @@ function Compose({setLookup, lookup}) {
     <dialog id="compose_modal" className="modal">
       <div className="modal-box">
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Letter: Required (must follow guidelines)</legend>
+          <legend className="fieldset-legend">Letter: Required (must follow guidelines) ({`${letterContent.length} / 3000`})</legend>
           <textarea className="textarea w-full h-24" placeholder="..." value={letterContent} onChange={e => setLetterContent(e.currentTarget.value)}></textarea>
         </fieldset>
         <fieldset className="fieldset">

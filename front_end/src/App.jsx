@@ -11,6 +11,7 @@ import Login from "./components/Login"
 import Register from "./components/Register";
 import AuthProtected from "./components/utils/AuthProtected";
 import ProfileSettings from "./components/ProfileSettings";
+import Intro from './components/Intro';
 
 function App() {
   const { countdown, connected, forceRefresh } = useContext(SitePingContext);
@@ -35,7 +36,7 @@ function App() {
               <Route path="/profile" element={<ProfileValidator/>}/>
               <Route path="/profile/:id" element={<ProfileValidator/>}/>
             </Route>
-            <Route path="*" element={<Navigate to='/home' />} />
+            <Route path="*" element={<Intro/>} />
           </Routes>
         </div>
         <div className="flex-initial min-h-40">
