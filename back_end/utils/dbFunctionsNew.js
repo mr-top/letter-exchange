@@ -68,7 +68,7 @@ class DbFunctions {
 
     const hashedPassword = await bcrypt.hash(inputPassword, 5);
 
-    const insertQuery = await query('INSERT INTO users (username, email, password, country, city, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7)', inputUsername, inputEmail, hashedPassword, geo.countryCode, geo.city, geo.lat, geo.lon);
+    const insertQuery = await query('INSERT INTO users (username, email, password, country, city, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7)', inputUsername, inputEmail, hashedPassword, geo.country_code, geo.city, geo.latitude, geo.longitude);
 
     if (insertQuery.success) {
       const result = insertQuery.result;
