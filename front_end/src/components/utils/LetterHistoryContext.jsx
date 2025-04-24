@@ -23,7 +23,7 @@ function LetterHistoryProvider(props) {
       }
     }
     fetchLetters();
-  }, [lookup]);
+  }, [lookup, loggedDetails]);
 
   useEffect(() => {
     setLetters(allLetters);
