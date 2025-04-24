@@ -185,7 +185,7 @@ class DbFunctions {
           if (this.id !== Number(targetId)) {
             if (!(relationResult.rowCount > 0)) {
               // create relationship
-              const insertQuery = await query('INSERT INTO relations (user_id, friend_id, confirmed) VALUES ($1, $2, true)', this.id, targetId);
+              const insertQuery = await query('INSERT INTO relations (user_id, friend_id, confirmed) VALUES ($1, $2, true), ($2, $1, false)', this.id, targetId);
   
               if (!insertQuery.success) return { msg: 'Database error' }
             }
