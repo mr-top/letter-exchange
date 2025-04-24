@@ -3,6 +3,7 @@ const session = require('express-session');
 const LokiStore = require('connect-loki')(session);
 const morgan = require('morgan');
 require('dotenv').config();
+const path = require('path');
 
 const nodemailer = require('nodemailer');
 
@@ -18,7 +19,7 @@ function requiresAuth(req, res, next) {
 
 const app = express();
 
-app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, '../front_end/dist')));
 
 app.use(session({
   cookie: {path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, sameSite: true},
@@ -225,7 +226,11 @@ app.post('/api/otp', async (req, res) => {
   } 
 
   res.send(result);
-})
+});
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../front_end/dist/index.html'));
+});
 
 app.listen(5555, () => {
   console.log('started listening');
