@@ -10,13 +10,10 @@ class DbFunctions {
   }
 
   async signout(id) {
-    const logged = this.logged;
-    const serverUserId = this.id;
-    const clientUserId = Number(id);
+    delete this.logged;
+    delete this.id;
 
-    if (logged) {
-      return serverUserId === clientUserId;
-    }
+    return true;
   }
 
   async signin(inputUsername, inputPassword) {

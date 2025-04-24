@@ -2,7 +2,6 @@ const express = require('express');
 const session = require('express-session');
 const LokiStore = require('connect-loki')(session);
 const morgan = require('morgan');
-const cors = require('cors');
 require('dotenv').config();
 
 const nodemailer = require('nodemailer');
@@ -70,7 +69,7 @@ app.post('/api/login', async (req, res) => {
   res.send(result);
 });
 
-app.post('/api/signout', requiresAuth, async (req, res) => {
+app.post('/api/signout', async (req, res) => {
   const {id} = req.body;
   let signedOut = false;
 
